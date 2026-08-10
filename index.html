@@ -23,7 +23,7 @@
   color-scheme: light;
   --ink:#111111;
   --ink-soft:#6E6E6E;
-  --accent-display:#E35205;   /* graphics only - 3.84:1 on white, never behind text */
+  --accent-display:#E35205;     /* graphics only - 3.84:1 on white, never behind text */
   --accent-interactive:#C2450B; /* links, buttons, focus - 5.06:1 on white */
   --navy:#12233A;
   --paper:#FFFFFF;
@@ -47,7 +47,7 @@ body{
   line-height:1.6;
   -webkit-font-smoothing:antialiased;
 }
-h1,h2,p,ul{margin:0}
+h1,h2,p{margin:0}
 
 .wrap{
   max-width:calc(var(--measure) + var(--pad) * 2);
@@ -56,62 +56,73 @@ h1,h2,p,ul{margin:0}
 }
 
 /* ---- Wordmark, set in live type ---- */
-.site-head{padding:2.25rem 0 0}
 .wordmark{
-  font-family:var(--sans);
+  font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;
   font-weight:700;
-  font-size:.9rem;
+  font-size:1rem;
   letter-spacing:.015em;
   line-height:1;
   display:inline-flex;
   align-items:center;
-  gap:.5em;
-  color:var(--ink);
+  white-space:nowrap;
 }
+.wordmark .silent{color:#000}
 .wordmark .rule{
   display:inline-block;
-  width:1px;
-  height:1em;
-  background:var(--rule);
+  width:max(1px,.029em);
+  height:.98em;
+  background:#9A9A9A;
+  margin:0 .30em 0 .34em;
 }
-.wordmark .intel{color:var(--ink-soft);position:relative}
-/* the lowercase i keeps a grey stem; only its tittle is orange */
-.wordmark .tittle{
+.wordmark .intel{color:#6E6E6E}
+/* dotless i (U+0131) carries no tittle of its own, so the orange square is the
+   only dot - offset left and high, exactly as in the built assets */
+.wordmark .i{position:relative;display:inline-block}
+.wordmark .dot{
   position:absolute;
-  left:.026em;
-  top:-.075em;
+  background:var(--accent-display);
   width:.150em;
   height:.150em;
-  background:var(--accent-display);
+  left:.026em;
+  top:.075em;
 }
+/* dark-background variants, per the wordmark spec token table */
+.band .wordmark .silent{color:#FFFFFF}
+.band .wordmark .intel{color:#C9C9C9}
+.band .wordmark .rule{background:#6A6A6A}
 
 /* ---- Sections ---- */
 section{padding:3.5rem 0}
-.hero{padding-top:3rem}
+.divider{border:0;border-top:1px solid var(--rule);margin:0}
 
-h1{
-  font-size:clamp(1.9rem,5vw,3.1rem);
-  line-height:1.2;
+/* the one dark band, now leading the page */
+.band{
+  background:var(--navy);
+  color:#fff;
+  padding:2.5rem 0 4rem;
+}
+.band .wordmark{margin-bottom:3rem}
+
+h1,.finale h2{
+  font-size:clamp(1.7rem,4.4vw,2.7rem);
+  line-height:1.25;
   font-weight:400;
   letter-spacing:-.01em;
-  margin-bottom:1.5rem;
   text-wrap:balance;
 }
-.subhead{color:var(--ink-soft);margin-bottom:2.25rem}
-
-.divider{border:0;border-top:1px solid var(--rule);margin:0}
+h1{margin-bottom:2.25rem}
 
 /* the three recognition lines */
 .beats p{margin-bottom:1.25rem;font-size:1.25rem;line-height:1.4}
 .beats p:last-of-type{margin-bottom:0}
-.beats + .turn{margin-top:2rem;color:var(--ink-soft)}
+.turn{margin-top:2rem;color:var(--ink-soft)}
 
 .credibility p{color:var(--ink-soft)}
 
-/* ---- Close, on the one dark band ---- */
-.close{background:var(--navy);color:#fff;padding:4rem 0}
-.close .lede{margin-bottom:1.25rem}
-.close .wry{color:#C7D0DB;margin-bottom:2.25rem}
+/* ---- Closing block, on white ---- */
+.finale h2{margin-bottom:1.5rem}
+.finale .subhead{color:var(--ink-soft);margin-bottom:1.25rem}
+.finale .wry{color:var(--ink-soft);margin-bottom:2.25rem}
 
 /* ---- Subscribe ---- */
 .subscribe{display:flex;flex-wrap:wrap;gap:.75rem;margin:0}
@@ -150,21 +161,21 @@ h1{
   color:var(--ink-soft);
   margin-top:.875rem;
 }
-.close .subscribe input[type=email]{border-color:transparent}
-.close .microcopy{color:#AEB9C6}
+.band .subscribe input[type=email]{border-color:transparent}
+.band .microcopy{color:#AEB9C6}
 
 :where(a,button,input):focus-visible{
   outline:2px solid var(--accent-interactive);
   outline-offset:2px;
 }
-.close :where(a,button,input):focus-visible{outline-color:#fff}
+.band :where(a,button,input):focus-visible{outline-color:#fff}
 
 /* ---- Footer ---- */
 .site-foot{
   font-family:var(--sans);
   font-size:.875rem;
   color:var(--ink-soft);
-  padding:2.5rem 0 3.5rem;
+  padding:1rem 0 3.5rem;
 }
 .site-foot p{margin-bottom:.4rem}
 .site-foot a{color:var(--accent-interactive);text-decoration-thickness:1px;text-underline-offset:2px}
@@ -177,38 +188,26 @@ h1{
 </head>
 <body>
 
-<header class="site-head">
-  <div class="wrap">
-    <span class="wordmark" aria-label="Silent Intelligence">
-      <span aria-hidden="true">SILENT</span>
-      <span class="rule" aria-hidden="true"></span>
-      <span class="intel" aria-hidden="true">i<span class="tittle"></span>NTELLIGENCE</span>
-    </span>
-  </div>
-</header>
-
 <main>
 
-  <section class="hero">
+  <section class="band">
     <div class="wrap">
-      <h1>Most companies are getting faster at work they understand less well.</h1>
+      <span class="wordmark" aria-label="Silent Intelligence"><span class="silent" aria-hidden="true">SILENT</span><span class="rule" aria-hidden="true"></span><span class="intel" aria-hidden="true"><span class="i">&#x131;<span class="dot"></span></span>NTELLIGENCE</span></span>
 
-      <p class="subhead">These are notes on how work actually gets done — the operations underneath the tools, what the work really is, who makes which judgment, where it stalls, and what it costs when it goes around twice. Sometimes that means process and measurement. Sometimes it means AI. Sometimes it is a bigger question about where technology is taking the way companies are built.</p>
+      <h1>Good technology recedes into the work. The results should be visible; the machinery should not.</h1>
 
       <form class="subscribe" action="https://read.silentintel.com/subscribe" method="get">
-        <label class="visually-hidden" for="email-hero">Your email address</label>
-        <input id="email-hero" type="email" name="email" placeholder="you@company.com" autocomplete="email" required>
+        <label class="visually-hidden" for="email-top">Your email address</label>
+        <input id="email-top" type="email" name="email" placeholder="you@company.com" autocomplete="email" required>
         <input type="hidden" name="utm_source" value="website">
         <input type="hidden" name="utm_medium" value="cta">
         <input type="hidden" name="utm_campaign" value="p1_launch">
-        <input type="hidden" name="utm_content" value="hero">
+        <input type="hidden" name="utm_content" value="top">
         <button type="submit">Get the next piece</button>
       </form>
       <p class="microcopy">Weekly, on Tuesdays. One essay. Unsubscribe whenever.</p>
     </div>
   </section>
-
-  <hr class="divider">
 
   <section>
     <div class="wrap">
@@ -229,18 +228,23 @@ h1{
     </div>
   </section>
 
-  <section class="close">
+  <hr class="divider">
+
+  <section class="finale">
     <div class="wrap">
-      <p class="lede">Good technology recedes into the work. The results should be visible; the machinery should not.</p>
+      <h2>Most companies are getting faster at work they understand less well.</h2>
+
+      <p class="subhead">These are notes on how work actually gets done — the operations underneath the tools, what the work really is, who makes which judgment, where it stalls, and what it costs when it goes around twice. Sometimes that means process and measurement. Sometimes it means AI. Sometimes it is a bigger question about where technology is taking the way companies are built.</p>
+
       <p class="wry">That is the whole idea, and it takes about a year of Tuesdays to explain properly.</p>
 
       <form class="subscribe" action="https://read.silentintel.com/subscribe" method="get">
-        <label class="visually-hidden" for="email-close">Your email address</label>
-        <input id="email-close" type="email" name="email" placeholder="you@company.com" autocomplete="email" required>
+        <label class="visually-hidden" for="email-bottom">Your email address</label>
+        <input id="email-bottom" type="email" name="email" placeholder="you@company.com" autocomplete="email" required>
         <input type="hidden" name="utm_source" value="website">
         <input type="hidden" name="utm_medium" value="cta">
         <input type="hidden" name="utm_campaign" value="p1_launch">
-        <input type="hidden" name="utm_content" value="close">
+        <input type="hidden" name="utm_content" value="bottom">
         <button type="submit">Get the next piece</button>
       </form>
       <p class="microcopy">Weekly, on Tuesdays. One essay. Unsubscribe whenever.</p>
