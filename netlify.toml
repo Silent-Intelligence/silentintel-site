@@ -1,0 +1,19 @@
+# Release 1 is plain static HTML - there is no build step.
+# Publishing the repo root means nothing can fail in CI.
+
+[build]
+  publish = "."
+  command = ""
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "geolocation=(), microphone=(), camera=()"
+
+# Deliberately NOT set for Release 1: Strict-Transport-Security.
+# Netlify already forces HTTPS. HSTS is cached by browsers and is awkward to
+# reverse, which makes launch night the wrong time to commit to it. Add it in
+# Release 2 as a considered choice.

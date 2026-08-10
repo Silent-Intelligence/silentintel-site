@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Silent Intelligence — notes on how work actually gets done</title>
+<meta name="description" content="For owners and operators who have been sold technology before. What actually makes the work flow - and what just makes it louder.">
+<link rel="canonical" href="https://silentintel.com/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://silentintel.com/">
+<meta property="og:site_name" content="Silent Intelligence">
+<meta property="og:title" content="Silent Intelligence">
+<meta property="og:description" content="Most companies are getting faster at work they understand less well. Notes on how work actually gets done. Weekly, on Tuesdays.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Silent Intelligence">
+<meta name="twitter:description" content="Most companies are getting faster at work they understand less well. Notes on how work actually gets done. Weekly, on Tuesdays.">
+
+<style>
+/* ---- Design tokens ---- */
+:root{
+  color-scheme: light;
+  --ink:#111111;
+  --ink-soft:#6E6E6E;
+  --accent-display:#E35205;   /* graphics only - 3.84:1 on white, never behind text */
+  --accent-interactive:#C2450B; /* links, buttons, focus - 5.06:1 on white */
+  --navy:#12233A;
+  --paper:#FFFFFF;
+  --rule:#E2E2E2;
+
+  --sans:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;
+  --serif:Georgia,"Times New Roman",serif;
+
+  --measure:62ch;
+  --pad:1.5rem;
+}
+
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:var(--serif);
+  font-size:1.125rem;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,p,ul{margin:0}
+
+.wrap{
+  max-width:calc(var(--measure) + var(--pad) * 2);
+  margin-inline:auto;
+  padding-inline:var(--pad);
+}
+
+/* ---- Wordmark, set in live type ---- */
+.site-head{padding:2.25rem 0 0}
+.wordmark{
+  font-family:var(--sans);
+  font-weight:700;
+  font-size:.9rem;
+  letter-spacing:.015em;
+  line-height:1;
+  display:inline-flex;
+  align-items:center;
+  gap:.5em;
+  color:var(--ink);
+}
+.wordmark .rule{
+  display:inline-block;
+  width:1px;
+  height:1em;
+  background:var(--rule);
+}
+.wordmark .intel{color:var(--ink-soft);position:relative}
+/* the lowercase i keeps a grey stem; only its tittle is orange */
+.wordmark .tittle{
+  position:absolute;
+  left:.026em;
+  top:-.075em;
+  width:.150em;
+  height:.150em;
+  background:var(--accent-display);
+}
+
+/* ---- Sections ---- */
+section{padding:3.5rem 0}
+.hero{padding-top:3rem}
+
+h1{
+  font-size:clamp(1.9rem,5vw,3.1rem);
+  line-height:1.2;
+  font-weight:400;
+  letter-spacing:-.01em;
+  margin-bottom:1.5rem;
+  text-wrap:balance;
+}
+.subhead{color:var(--ink-soft);margin-bottom:2.25rem}
+
+.divider{border:0;border-top:1px solid var(--rule);margin:0}
+
+/* the three recognition lines */
+.beats p{margin-bottom:1.25rem;font-size:1.25rem;line-height:1.4}
+.beats p:last-of-type{margin-bottom:0}
+.beats + .turn{margin-top:2rem;color:var(--ink-soft)}
+
+.credibility p{color:var(--ink-soft)}
+
+/* ---- Close, on the one dark band ---- */
+.close{background:var(--navy);color:#fff;padding:4rem 0}
+.close .lede{margin-bottom:1.25rem}
+.close .wry{color:#C7D0DB;margin-bottom:2.25rem}
+
+/* ---- Subscribe ---- */
+.subscribe{display:flex;flex-wrap:wrap;gap:.75rem;margin:0}
+.visually-hidden{
+  position:absolute;width:1px;height:1px;padding:0;margin:-1px;
+  overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0;
+}
+.subscribe input[type=email]{
+  flex:1 1 16rem;
+  min-width:0;
+  font-family:var(--sans);
+  font-size:1rem;
+  padding:.85rem 1rem;
+  color:var(--ink);
+  background:#fff;
+  border:1px solid var(--rule);
+  border-radius:2px;
+}
+.subscribe input[type=email]::placeholder{color:#8A8A8A}
+.subscribe button{
+  flex:0 0 auto;
+  font-family:var(--sans);
+  font-size:1rem;
+  font-weight:600;
+  padding:.85rem 1.4rem;
+  color:#fff;
+  background:var(--accent-interactive);
+  border:1px solid var(--accent-interactive);
+  border-radius:2px;
+  cursor:pointer;
+}
+.subscribe button:hover{background:#A93A09;border-color:#A93A09}
+.microcopy{
+  font-family:var(--sans);
+  font-size:.875rem;
+  color:var(--ink-soft);
+  margin-top:.875rem;
+}
+.close .subscribe input[type=email]{border-color:transparent}
+.close .microcopy{color:#AEB9C6}
+
+:where(a,button,input):focus-visible{
+  outline:2px solid var(--accent-interactive);
+  outline-offset:2px;
+}
+.close :where(a,button,input):focus-visible{outline-color:#fff}
+
+/* ---- Footer ---- */
+.site-foot{
+  font-family:var(--sans);
+  font-size:.875rem;
+  color:var(--ink-soft);
+  padding:2.5rem 0 3.5rem;
+}
+.site-foot p{margin-bottom:.4rem}
+.site-foot a{color:var(--accent-interactive);text-decoration-thickness:1px;text-underline-offset:2px}
+.site-foot a:hover{color:var(--ink)}
+
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+
+<header class="site-head">
+  <div class="wrap">
+    <span class="wordmark" aria-label="Silent Intelligence">
+      <span aria-hidden="true">SILENT</span>
+      <span class="rule" aria-hidden="true"></span>
+      <span class="intel" aria-hidden="true">i<span class="tittle"></span>NTELLIGENCE</span>
+    </span>
+  </div>
+</header>
+
+<main>
+
+  <section class="hero">
+    <div class="wrap">
+      <h1>Most companies are getting faster at work they understand less well.</h1>
+
+      <p class="subhead">These are notes on how work actually gets done — the operations underneath the tools, what the work really is, who makes which judgment, where it stalls, and what it costs when it goes around twice. Sometimes that means process and measurement. Sometimes it means AI. Sometimes it is a bigger question about where technology is taking the way companies are built.</p>
+
+      <form class="subscribe" action="https://read.silentintel.com/subscribe" method="get">
+        <label class="visually-hidden" for="email-hero">Your email address</label>
+        <input id="email-hero" type="email" name="email" placeholder="you@company.com" autocomplete="email" required>
+        <input type="hidden" name="utm_source" value="website">
+        <input type="hidden" name="utm_medium" value="cta">
+        <input type="hidden" name="utm_campaign" value="p1_launch">
+        <input type="hidden" name="utm_content" value="hero">
+        <button type="submit">Get the next piece</button>
+      </form>
+      <p class="microcopy">Weekly, on Tuesdays. One essay. Unsubscribe whenever.</p>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <section>
+    <div class="wrap">
+      <div class="beats">
+        <p>A proposal comes back for another review.</p>
+        <p>A decision waits for the owner.</p>
+        <p>Only one person knows why the process works.</p>
+      </div>
+      <p class="turn">These look like separate problems. In my experience they are one problem wearing three costumes — a workflow that is not visible enough to improve, or to hand to anyone else.</p>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <section class="credibility">
+    <div class="wrap">
+      <p>I spent twenty-five years in and around technology and engineering organizations, more than twelve of them leading consulting projects for Fortune 500 companies. I was trained in philosophy, linguistics, and literary criticism, which is why I look at a workflow as a human system before I look at it as a technical one. I co-authored <em>The Silent Intelligence</em> in 2013, one of the first books on the Internet of Things.</p>
+    </div>
+  </section>
+
+  <section class="close">
+    <div class="wrap">
+      <p class="lede">Good technology recedes into the work. The results should be visible; the machinery should not.</p>
+      <p class="wry">That is the whole idea, and it takes about a year of Tuesdays to explain properly.</p>
+
+      <form class="subscribe" action="https://read.silentintel.com/subscribe" method="get">
+        <label class="visually-hidden" for="email-close">Your email address</label>
+        <input id="email-close" type="email" name="email" placeholder="you@company.com" autocomplete="email" required>
+        <input type="hidden" name="utm_source" value="website">
+        <input type="hidden" name="utm_medium" value="cta">
+        <input type="hidden" name="utm_campaign" value="p1_launch">
+        <input type="hidden" name="utm_content" value="close">
+        <button type="submit">Get the next piece</button>
+      </form>
+      <p class="microcopy">Weekly, on Tuesdays. One essay. Unsubscribe whenever.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-foot">
+  <div class="wrap">
+    <p>Silent Intelligence · San Diego</p>
+    <p><a href="https://read.silentintel.com">Read on Substack</a> · <a href="https://www.linkedin.com/in/danielobodovski/">LinkedIn</a></p>
+    <p>© 2026</p>
+  </div>
+</footer>
+
+</body>
+</html>
