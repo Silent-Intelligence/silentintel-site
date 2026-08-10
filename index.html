@@ -47,7 +47,7 @@ body{
   line-height:1.6;
   -webkit-font-smoothing:antialiased;
 }
-h1,h2,p{margin:0}
+h1,p{margin:0}
 
 .wrap{
   max-width:calc(var(--measure) + var(--pad) * 2);
@@ -81,9 +81,9 @@ h1,h2,p{margin:0}
 .wordmark .dot{
   position:absolute;
   background:var(--accent-display);
-  width:.150em;
+  width:.142em;   /* measured stem width of Helvetica Neue Bold: 142/1000 em */
   height:.150em;
-  left:.026em;
+  left:.026em;    /* stem starts at .058em, so the square sits .032em left of it */
   top:.075em;
 }
 /* dark-background variants, per the wordmark spec token table */
@@ -92,25 +92,20 @@ h1,h2,p{margin:0}
 .band .wordmark .rule{background:#6A6A6A}
 
 /* ---- Sections ---- */
+.site-head{padding:2.25rem 0 0}
 section{padding:3.5rem 0}
+.hero{padding-top:3rem}
 .divider{border:0;border-top:1px solid var(--rule);margin:0}
 
-/* the one dark band, now leading the page */
-.band{
-  background:var(--navy);
-  color:#fff;
-  padding:2.5rem 0 4rem;
-}
-.band .wordmark{margin-bottom:3rem}
-
-h1,.finale h2{
-  font-size:clamp(1.7rem,4.4vw,2.7rem);
-  line-height:1.25;
+h1{
+  font-size:clamp(1.9rem,5vw,3.1rem);
+  line-height:1.2;
   font-weight:400;
   letter-spacing:-.01em;
+  margin-bottom:1.5rem;
   text-wrap:balance;
 }
-h1{margin-bottom:2.25rem}
+.subhead{color:var(--ink-soft);margin-bottom:2.25rem}
 
 /* the three recognition lines */
 .beats p{margin-bottom:1.25rem;font-size:1.25rem;line-height:1.4}
@@ -119,10 +114,10 @@ h1{margin-bottom:2.25rem}
 
 .credibility p{color:var(--ink-soft)}
 
-/* ---- Closing block, on white ---- */
-.finale h2{margin-bottom:1.5rem}
-.finale .subhead{color:var(--ink-soft);margin-bottom:1.25rem}
-.finale .wry{color:var(--ink-soft);margin-bottom:2.25rem}
+/* ---- Close, on the one dark band ---- */
+.band{background:var(--navy);color:#fff;padding:4rem 0}
+.band .lede{margin-bottom:1.25rem}
+.band .wry{color:#C7D0DB;margin-bottom:2.25rem}
 
 /* ---- Subscribe ---- */
 .subscribe{display:flex;flex-wrap:wrap;gap:.75rem;margin:0}
@@ -175,7 +170,7 @@ h1{margin-bottom:2.25rem}
   font-family:var(--sans);
   font-size:.875rem;
   color:var(--ink-soft);
-  padding:1rem 0 3.5rem;
+  padding:2.5rem 0 3.5rem;
 }
 .site-foot p{margin-bottom:.4rem}
 .site-foot a{color:var(--accent-interactive);text-decoration-thickness:1px;text-underline-offset:2px}
@@ -188,26 +183,34 @@ h1{margin-bottom:2.25rem}
 </head>
 <body>
 
+<header class="site-head">
+  <div class="wrap">
+    <span class="wordmark" aria-label="Silent Intelligence"><span class="silent" aria-hidden="true">SILENT</span><span class="rule" aria-hidden="true"></span><span class="intel" aria-hidden="true"><span class="i">&#x131;<span class="dot"></span></span>NTELLIGENCE</span></span>
+  </div>
+</header>
+
 <main>
 
-  <section class="band">
+  <section class="hero">
     <div class="wrap">
-      <span class="wordmark" aria-label="Silent Intelligence"><span class="silent" aria-hidden="true">SILENT</span><span class="rule" aria-hidden="true"></span><span class="intel" aria-hidden="true"><span class="i">&#x131;<span class="dot"></span></span>NTELLIGENCE</span></span>
+      <h1>Most companies are getting faster at work they understand less well.</h1>
 
-      <h1>Good technology recedes into the work. The results should be visible; the machinery should not.</h1>
+      <p class="subhead">These are notes on how work actually gets done — the operations underneath the tools, what the work really is, who makes which judgment, where it stalls, and what it costs when it goes around twice. Sometimes that means process and measurement. Sometimes it means AI. Sometimes it is a bigger question about where technology is taking the way companies are built.</p>
 
       <form class="subscribe" action="https://read.silentintel.com/subscribe" method="get">
-        <label class="visually-hidden" for="email-top">Your email address</label>
-        <input id="email-top" type="email" name="email" placeholder="you@company.com" autocomplete="email" required>
+        <label class="visually-hidden" for="email-hero">Your email address</label>
+        <input id="email-hero" type="email" name="email" placeholder="you@company.com" autocomplete="email" required>
         <input type="hidden" name="utm_source" value="website">
         <input type="hidden" name="utm_medium" value="cta">
         <input type="hidden" name="utm_campaign" value="p1_launch">
-        <input type="hidden" name="utm_content" value="top">
+        <input type="hidden" name="utm_content" value="hero">
         <button type="submit">Get the next piece</button>
       </form>
       <p class="microcopy">Weekly, on Tuesdays. One essay. Unsubscribe whenever.</p>
     </div>
   </section>
+
+  <hr class="divider">
 
   <section>
     <div class="wrap">
@@ -228,23 +231,18 @@ h1{margin-bottom:2.25rem}
     </div>
   </section>
 
-  <hr class="divider">
-
-  <section class="finale">
+  <section class="band">
     <div class="wrap">
-      <h2>Most companies are getting faster at work they understand less well.</h2>
-
-      <p class="subhead">These are notes on how work actually gets done — the operations underneath the tools, what the work really is, who makes which judgment, where it stalls, and what it costs when it goes around twice. Sometimes that means process and measurement. Sometimes it means AI. Sometimes it is a bigger question about where technology is taking the way companies are built.</p>
-
+      <p class="lede">Good technology recedes into the work. The results should be visible; the machinery should not.</p>
       <p class="wry">That is the whole idea, and it takes about a year of Tuesdays to explain properly.</p>
 
       <form class="subscribe" action="https://read.silentintel.com/subscribe" method="get">
-        <label class="visually-hidden" for="email-bottom">Your email address</label>
-        <input id="email-bottom" type="email" name="email" placeholder="you@company.com" autocomplete="email" required>
+        <label class="visually-hidden" for="email-close">Your email address</label>
+        <input id="email-close" type="email" name="email" placeholder="you@company.com" autocomplete="email" required>
         <input type="hidden" name="utm_source" value="website">
         <input type="hidden" name="utm_medium" value="cta">
         <input type="hidden" name="utm_campaign" value="p1_launch">
-        <input type="hidden" name="utm_content" value="bottom">
+        <input type="hidden" name="utm_content" value="close">
         <button type="submit">Get the next piece</button>
       </form>
       <p class="microcopy">Weekly, on Tuesdays. One essay. Unsubscribe whenever.</p>
