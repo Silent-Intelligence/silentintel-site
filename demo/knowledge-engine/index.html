@@ -1,375 +1,527 @@
-<!doctype html>
-<html lang="en"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>A self-reinforcing knowledge engine — SMBai</title>
-<meta name="description" content="Separate what your firm knows from what it produces, so every deck, proposal and campaign starts from everything you have already worked out.">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Engine — SMBai</title>
+<meta name="description" content="A self-reinforcing knowledge engine. Separate what your firm knows from what it produces.">
 <meta name="robots" content="noindex,nofollow">
-<meta property="og:title" content="A self-reinforcing knowledge engine">
-<meta property="og:description" content="Separate what your firm knows from what it produces, so every deck, proposal and campaign starts from everything you have already worked out.">
+<meta property="og:title" content="The Engine — SMBai">
+<meta property="og:description" content="Your business, with a memory.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://silentintel.com/demo/knowledge-engine/">
 <meta name="twitter:card" content="summary">
 <script>document.documentElement.className+=" js";</script>
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@200;300;400;500;600;700;800&family=Martian+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root{
-  --slate:#1a1e24; --slate-2:#22262d; --deep:#14171c;
-  --paper:#f0f4f6; --soft:#c3cad2; --mut:#8b939c; --faint:#6b737c;
-  --spec:#eb6200; --spec-soft:rgba(235,98,0,.12);
-  --dim:#3d9fd6; --dim-soft:rgba(61,159,214,.12);
-  --line:rgba(160,172,184,.15); --line-2:rgba(160,172,184,.28);
-  --panel:rgba(240,244,246,.035);
-  --sans:"Sora",system-ui,-apple-system,sans-serif;
-  --mono:"Martian Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
-}
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{margin:0;background:var(--slate);color:var(--soft);font-family:var(--sans);
-  font-size:17px;line-height:1.62;overflow-x:hidden;-webkit-font-smoothing:antialiased}
-#sky{position:fixed;inset:0;z-index:0;pointer-events:none}
-main{position:relative;z-index:1}
-h1,h2,h3,h4{margin:0;color:var(--paper);letter-spacing:-.032em;line-height:1.06;font-weight:700}
-p{margin:0}
-a{color:inherit}
+  :root{
+    --space:#05070D; --neb:#0E1330; --star:#F2F4FA; --dim:#6E7690; --line:#1E2540;
+    --mint:#7CF5C9; --amber:#FFB454; --panel:rgba(14,19,48,.55);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-snap-type:y mandatory;scroll-behavior:smooth}
+  body{background:var(--space);color:var(--star);font-family:"Space Grotesk",system-ui,sans-serif;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+  #sky{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+  #neb{position:fixed;inset:0;z-index:0;pointer-events:none;
+    background:
+      radial-gradient(60vw 40vw at 75% 20%, rgba(124,245,201,.07), transparent 60%),
+      radial-gradient(50vw 50vw at 15% 85%, rgba(255,180,84,.05), transparent 60%),
+      radial-gradient(80vw 60vw at 50% 50%, rgba(14,19,48,.9), transparent 70%);}
+  main{position:relative;z-index:1}
+  section.scene{min-height:100vh;scroll-snap-align:start;display:grid;align-items:center;padding:clamp(24px,6vw,96px);position:relative}
+  .wrap{max-width:1180px;width:100%;margin:0 auto}
+  h1,h2{font-weight:600;letter-spacing:-.02em;line-height:1.05}
+  h1{font-size:clamp(56px,10vw,132px);font-weight:700}
+  h2{font-size:clamp(34px,5vw,64px);max-width:22ch}
+  .lead{font-size:clamp(17px,1.6vw,22px);color:var(--dim);max-width:52ch;line-height:1.5;margin-top:18px}
+  .big{font-size:clamp(20px,2.2vw,28px);line-height:1.4;max-width:34ch;margin-top:22px}
+  .signal{color:var(--mint)}
+  .out{color:var(--amber)}
+  .kicker{font-size:14px;color:var(--mint);letter-spacing:.06em;margin-bottom:22px;font-weight:500}
+  /* reveal */
+  .js .r{opacity:0;transform:translateY(14px);transition:opacity .9s cubic-bezier(.2,.7,.2,1),transform .9s cubic-bezier(.2,.7,.2,1)}
+  .scene.on .r{opacity:1;transform:none}
+  .scene.on .r:nth-child(2){transition-delay:.12s}.scene.on .r:nth-child(3){transition-delay:.24s}.scene.on .r:nth-child(4){transition-delay:.36s}
 
-/* ---------- continuous full-bleed scenes ---------- */
-.scene{padding:clamp(88px,11vh,150px) clamp(22px,5vw,64px);position:relative}
-.scene+.scene{border-top:1px solid var(--line)}
-.wrap{max-width:1120px;margin:0 auto;width:100%}
-.kick{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--spec);margin-bottom:20px}
-h2{font-size:clamp(30px,4.4vw,52px);max-width:19ch}
-h2 em{font-style:normal;color:var(--spec)}
-.sub{color:var(--mut);font-size:clamp(17px,1.9vw,21px);font-weight:300;max-width:62ch;margin-top:20px;line-height:1.55}
-.prose{max-width:60ch;margin-top:30px;font-size:clamp(17px,1.85vw,20px);font-weight:300;color:var(--soft)}
-.prose p+p{margin-top:20px}
-.prose b{color:var(--paper);font-weight:500}
+  /* hero */
+  #hero .wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center}
+  #hero .tag{color:var(--dim);font-size:15px;letter-spacing:.04em;margin-bottom:26px}
+  #hero .tag b{color:var(--star);font-weight:500}
+  .core{position:relative;width:min(38vw,440px);aspect-ratio:1;justify-self:center}
+  .core svg{width:100%;height:100%;overflow:visible}
+  .pulse{transform-origin:center;animation:pulse 5s ease-in-out infinite}
+  @keyframes pulse{0%,100%{transform:scale(1);opacity:.35}50%{transform:scale(1.18);opacity:.12}}
+  .orbit{transform-origin:200px 200px;animation:spin 60s linear infinite}
+  .orbit text{transform-origin:center}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .scroll-hint{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);color:var(--dim);font-size:13px;display:flex;flex-direction:column;align-items:center;gap:10px}
+  .scroll-hint i{display:block;width:1px;height:38px;background:linear-gradient(var(--mint),transparent);animation:drop 2s ease-in-out infinite}
+  @keyframes drop{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
 
-/* ---------- header ---------- */
-header{position:fixed;top:0;left:0;right:0;z-index:30;
-  background:rgba(26,30,36,.82);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
-.hw{max-width:1120px;margin:0 auto;padding:12px clamp(22px,5vw,64px);display:flex;align-items:center;justify-content:space-between;gap:16px}
-.lock{display:flex;align-items:center;gap:12px;min-width:0}
-.mk{width:25px;height:25px;flex:none}
-.nm{font-weight:700;font-size:17.5px;letter-spacing:-.03em;color:var(--paper)}
-.divr{width:1px;height:24px;background:var(--line-2);flex:none}
-.by{font-family:var(--mono);font-size:8.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);white-space:nowrap}
-.siwm{height:10px;width:auto;color:var(--mut);display:block}
-.cta-sm{font-family:var(--mono);font-size:9.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--spec);
-  border:1px solid var(--spec);border-radius:99px;padding:8px 16px;text-decoration:none;white-space:nowrap;transition:.2s}
-.cta-sm:hover{background:var(--spec);color:#fff}
+  /* three */
+  .three{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;margin-top:56px}
+  .three > div{padding-top:26px;border-top:1px solid var(--line);position:relative}
+  .three > div::before{content:"";position:absolute;top:-4px;left:0;width:7px;height:7px;border-radius:50%;background:var(--mint);box-shadow:0 0 14px var(--mint)}
+  .three h3{font-size:22px;font-weight:600;margin-bottom:12px;line-height:1.2}
+  .three p{color:var(--dim);line-height:1.55;font-size:16px}
+  .three q{color:var(--star)}
 
-/* ---------- hero ---------- */
-#hero{padding-top:clamp(140px,20vh,210px);padding-bottom:clamp(90px,14vh,150px)}
-#hero .eyb{font-family:var(--mono);font-size:11px;letter-spacing:.17em;text-transform:uppercase;color:var(--spec)}
-#hero h1{font-size:clamp(42px,7.4vw,92px);max-width:15ch;margin-top:26px;font-weight:700}
-#hero h1 em{font-style:normal;color:var(--spec)}
-#hero .lede{color:var(--soft);font-size:clamp(18px,2.3vw,25px);font-weight:200;max-width:56ch;margin-top:30px;line-height:1.5}
-.scrollcue{margin-top:clamp(46px,7vh,84px);display:flex;align-items:center;gap:13px;
-  font-family:var(--mono);font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--faint)}
-.scrollcue span{display:block;width:44px;height:1px;background:linear-gradient(90deg,var(--spec),transparent)}
+  /* flow diagram */
+  .flow{display:grid;grid-template-columns:1fr 1.4fr 1fr;gap:0;align-items:center;margin-top:40px}
+  .col{display:flex;flex-direction:column;gap:10px}
+  .col h4{font-size:13px;letter-spacing:.06em;font-weight:500;margin-bottom:6px}
+  .chip{padding:12px 16px;border:1px solid var(--line);border-radius:6px;background:var(--panel);font-size:15px;backdrop-filter:blur(6px)}
+  .chip.o{border-color:rgba(255,180,84,.25)}
+  .flow svg{width:100%;height:auto;overflow:visible}
+  .note{text-align:center;color:var(--dim);font-size:14px;margin-top:12px;font-style:normal}
 
-/* ---------- soft panels, never opaque cards ---------- */
-.cols3{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;margin-top:clamp(40px,6vh,64px);background:var(--line)}
-.cols3>div{background:var(--slate);padding:34px 30px}
-.cols3 .q{color:var(--faint);font-style:italic;font-size:15.5px;display:block;margin-bottom:16px;min-height:3em}
-.cols3 h3{font-size:21px;font-weight:600;margin-bottom:11px}
-.cols3 p{color:var(--mut);font-size:15.5px;line-height:1.6}
-.n{font-family:var(--mono);font-size:10.5px;color:var(--spec);letter-spacing:.14em;margin-bottom:14px}
+  /* flywheel */
+  .wheel{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;margin-top:24px}
+  .wheel svg{width:min(100%,460px);height:auto;justify-self:center;overflow:visible}
+  .steps{display:grid;gap:20px}
+  .step{display:grid;grid-template-columns:34px 1fr;gap:14px;align-items:start}
+  .step b{color:var(--mint);font-weight:600;font-size:18px;padding-top:2px}
+  .step h3{font-size:20px;font-weight:600;margin-bottom:4px}
+  .step p{color:var(--dim);font-size:15px;line-height:1.5}
+  .ring{transform-origin:230px 230px;animation:spin 40s linear infinite}
+  .ring text{font-family:"Space Grotesk";font-weight:600}
+  .cring{transform-origin:230px 230px;animation:spin 40s linear infinite reverse}
 
-/* split */
-.split{display:grid;grid-template-columns:1fr auto 1fr;gap:clamp(24px,4vw,56px);align-items:center;margin-top:clamp(44px,6vh,70px)}
-.col h4{font-family:var(--mono);font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:20px}
-.col.k h4{color:var(--dim)} .col.o h4{color:var(--spec)}
-.col ul{list-style:none;margin:0;padding:0}
-.col li{padding:11px 0;border-bottom:1px solid var(--line);font-size:16px;color:var(--soft)}
-.col li:last-child{border-bottom:0}
-.hub{width:clamp(108px,13vw,144px);aspect-ratio:1;border-radius:50%;border:1px solid var(--spec);
-  background:var(--spec-soft);display:flex;flex-direction:column;align-items:center;justify-content:center;
-  font-family:var(--mono);font-size:9px;letter-spacing:.13em;line-height:1.9;color:var(--paper);text-align:center}
-.hub b{color:var(--spec);font-weight:500}
-.note{margin-top:34px;font-family:var(--mono);font-size:12px;color:var(--mut);letter-spacing:.02em;
-  border-left:2px solid var(--dim);padding-left:16px;line-height:1.8;max-width:60ch}
+  /* compare */
+  .cmp{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-top:48px}
+  .cmp > div{padding:30px;border-radius:10px;border:1px solid var(--line);background:var(--panel);backdrop-filter:blur(6px)}
+  .cmp > div.me{border-color:rgba(124,245,201,.45);box-shadow:0 0 60px rgba(124,245,201,.08) inset}
+  .cmp h3{font-size:24px;margin-bottom:18px}
+  .cmp ul{list-style:none;display:grid;gap:10px;color:var(--dim);font-size:16px;line-height:1.45}
+  .cmp li{padding-left:18px;position:relative}
+  .cmp li::before{content:"";position:absolute;left:0;top:.6em;width:6px;height:6px;border-radius:50%;background:var(--dim)}
+  .cmp .me li{color:var(--star)}.cmp .me li::before{background:var(--mint);box-shadow:0 0 8px var(--mint)}
 
-/* flow */
-.flow{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;margin-top:clamp(40px,6vh,64px);background:var(--line)}
-.flow>div{background:var(--slate);padding:30px 22px}
-.flow .n{width:28px;height:28px;border-radius:50%;border:1px solid var(--spec);color:var(--spec);
-  font-family:var(--mono);font-size:11.5px;display:flex;align-items:center;justify-content:center;margin-bottom:17px;letter-spacing:0}
-.flow h3{font-size:17.5px;font-weight:600;margin-bottom:9px}
-.flow p{font-size:14.5px;color:var(--mut);line-height:1.6}
+  /* pathway */
+  .path{margin-top:40px}
+  .path svg{width:100%;height:auto;overflow:visible}
+  .stages{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;margin-top:8px}
+  .stages h3{font-size:24px;margin:8px 0 8px}
+  .stages small{color:var(--mint);font-size:14px;letter-spacing:.05em}
+  .stages p{color:var(--dim);font-size:15px;line-height:1.5}
+  .grow{transform-origin:center;transform:scale(0);transition:transform 1s cubic-bezier(.2,.8,.2,1.2)}
+  .scene.on .grow{transform:scale(1)}
+  .scene.on .grow:nth-of-type(2){transition-delay:.5s}.scene.on .grow:nth-of-type(3){transition-delay:1s}
+  .dash{stroke-dasharray:6 8;stroke-dashoffset:600;transition:stroke-dashoffset 2.2s ease-out .4s}
+  .scene.on .dash{stroke-dashoffset:0}
+  .pull{padding:22px 28px;border:1px solid var(--line);border-radius:8px;text-align:center;font-size:19px;margin-top:40px;background:var(--panel)}
 
-/* compare */
-.cmp{display:grid;grid-template-columns:1fr 1fr;gap:clamp(18px,3vw,34px);margin-top:clamp(40px,6vh,64px)}
-.side{padding:34px 32px;border-radius:3px}
-.side.off{border:1px solid var(--line)}
-.side.own{border:1px solid var(--spec);background:var(--spec-soft)}
-.side h3{font-size:19.5px;margin-bottom:20px}
-.side ul{list-style:none;margin:0;padding:0}
-.side li{padding:12px 0 12px 28px;position:relative;font-size:15.5px;border-bottom:1px solid var(--line);color:var(--soft)}
-.side li:last-child{border-bottom:0}
-.side.off li{color:var(--mut)}
-.side.off li:before{content:"×";position:absolute;left:0;color:var(--faint);font-size:17px;top:10px}
-.side.own li:before{content:"→";position:absolute;left:0;color:var(--spec);font-size:14px;top:12px}
+  /* modules */
+  .mods{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:44px}
+  .mod{padding:26px 28px;border:1px solid var(--line);border-radius:10px;background:var(--panel);backdrop-filter:blur(6px);position:relative;transition:border-color .3s}
+  .mod:hover{border-color:rgba(124,245,201,.4)}
+  .mod::after{content:"";position:absolute;top:28px;right:26px;width:9px;height:9px;border-radius:50%;background:var(--mint);box-shadow:0 0 16px var(--mint)}
+  .mod h3{font-size:22px;margin-bottom:10px}
+  .mod p{color:var(--dim);font-size:15px;line-height:1.5}
 
-/* ladder + modules + tiers */
-.trio{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;margin-top:clamp(40px,6vh,64px);background:var(--line)}
-.trio>div{background:var(--slate);padding:34px 30px;display:flex;flex-direction:column}
-.trio .tag{font-family:var(--mono);font-size:9.5px;letter-spacing:.15em;text-transform:uppercase;color:var(--spec);margin-bottom:15px}
-.trio h3{font-size:22px;margin-bottom:11px}
-.trio p{color:var(--mut);font-size:15.5px;line-height:1.6}
-.trio ul{list-style:none;margin:18px 0 0;padding:0;flex:1}
-.trio li{padding:8px 0;font-size:15px;color:var(--soft);border-bottom:1px solid var(--line)}
-.trio li:last-child{border-bottom:0}
-.shape{margin-top:20px;font-family:var(--mono);font-size:10px;letter-spacing:.13em;color:var(--faint);text-transform:uppercase}
-.quad{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;margin-top:clamp(40px,6vh,64px);background:var(--line)}
-.quad>div{background:var(--slate);padding:32px 26px}
-.quad h3{font-size:19px;margin-bottom:11px;color:var(--paper)}
-.quad p{color:var(--mut);font-size:15px;line-height:1.6}
-.quad .bar{width:26px;height:2px;background:var(--dim);margin-bottom:17px}
+  /* layers */
+  .layers{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:44px}
+  .layer{padding:28px;border:1px solid var(--line);border-radius:10px;background:var(--panel);backdrop-filter:blur(6px);display:flex;flex-direction:column;gap:14px}
+  .layer.top{border-color:rgba(255,180,84,.45)}
+  .layer small{font-size:13px;letter-spacing:.06em;color:var(--mint);font-weight:500}
+  .layer.top small{color:var(--amber)}
+  .layer h3{font-size:24px}
+  .layer p{color:var(--dim);font-size:15px;line-height:1.5}
+  .layer ul{list-style:none;display:grid;gap:8px;font-size:15px;color:var(--star)}
+  .layer li::before{content:"— ";color:var(--dim)}
+  .layer em{margin-top:auto;padding-top:14px;color:var(--dim);font-style:normal;font-size:13px;letter-spacing:.04em}
 
-/* pays */
-.pays{display:grid;grid-template-columns:1fr 1fr;gap:1px;margin-top:clamp(40px,6vh,64px);background:var(--line)}
-.pays>div{background:var(--slate);padding:34px 32px}
-.pays h3{font-size:20px;font-weight:600;margin-bottom:11px;max-width:24ch}
-.pays p{color:var(--mut);font-size:15.5px;line-height:1.6}
+  /* stats */
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:28px;margin-top:52px}
+  .stat b{display:block;font-size:clamp(56px,6vw,84px);font-weight:700;color:var(--mint);line-height:1;letter-spacing:-.03em}
+  .stat h3{font-size:17px;font-weight:600;margin:12px 0 8px}
+  .stat p{color:var(--dim);font-size:15px;line-height:1.5}
+  .rule{border:0;border-top:1px solid var(--line);margin:44px 0 22px}
 
-/* close */
-#close{text-align:center;padding-bottom:clamp(100px,15vh,170px)}
-#close h2{max-width:22ch;margin:0 auto;font-size:clamp(30px,5vw,58px)}
-#close .sub{margin:26px auto 0;text-align:center}
-.btn{display:inline-block;margin-top:40px;background:var(--spec);color:#fff;text-decoration:none;
-  font-weight:600;font-size:16.5px;padding:17px 40px;border-radius:99px;transition:.2s}
-.btn:hover{background:#ff7415;transform:translateY(-1px)}
+  /* close */
+  #close .wrap{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}
+  #close h2{max-width:14ch}
+  .cta{display:inline-flex;align-items:center;gap:12px;margin-top:30px;padding:16px 26px;border-radius:999px;border:1px solid var(--mint);color:var(--space);background:var(--mint);font-weight:600;font-size:17px;text-decoration:none;box-shadow:0 0 40px rgba(124,245,201,.25)}
+  .cta:focus-visible,.dots a:focus-visible{outline:2px solid var(--amber);outline-offset:3px}
+  .sig{color:var(--dim);font-size:14px;margin-top:28px}
 
-/* footer */
-footer{padding:40px clamp(22px,5vw,64px) 64px;border-top:1px solid var(--line);position:relative;z-index:1}
-.fl{max-width:1120px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
-.flock{display:flex;align-items:center;gap:12px}
-.fnote{font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--faint);text-transform:uppercase}
+  /* nav dots */
+  .dots{position:fixed;right:22px;top:50%;transform:translateY(-50%);z-index:5;display:grid;gap:12px}
+  .dots a{width:8px;height:8px;border-radius:50%;background:var(--line);display:block;transition:all .3s}
+  .dots a.cur{background:var(--mint);box-shadow:0 0 12px var(--mint)}
+  .brand{position:fixed;top:22px;left:28px;z-index:5;display:flex;align-items:center;gap:11px;opacity:.95}
+  .brand .mk{width:23px;height:23px;flex:none}
+  .brand .nm{font-weight:600;font-size:16px;letter-spacing:-.02em;color:var(--star)}
+  .brand .divr{width:1px;height:19px;background:var(--line);flex:none}
+  .brand .by{font-size:8.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--dim);white-space:nowrap}
+  .brand .siwm{height:9.5px;width:auto;color:var(--dim);display:block}
+  @media (max-width:820px){.brand .divr,.brand .by,.brand .siwm{display:none}}
+  .brand b{color:var(--star);font-weight:500}
 
-/* right-side progress dots */
-.dots{position:fixed;right:20px;top:50%;transform:translateY(-50%);z-index:20;display:grid;gap:13px}
-.dots a{width:7px;height:7px;border-radius:50%;background:var(--line-2);display:block;transition:.25s}
-.dots a.on{background:var(--spec);transform:scale(1.45)}
-
-/* reveal on scroll */
-.js .rv{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s ease}
-.js .rv.in{opacity:1;transform:none}
-
-@media (max-width:920px){
-  .cols3,.flow,.cmp,.trio,.quad,.pays{grid-template-columns:1fr}
-  .split{grid-template-columns:1fr;gap:26px;justify-items:start}
-  .dots{display:none}
-  .by,.siwm,.divr{display:none}
-}
-@media (prefers-reduced-motion:reduce){
-  html{scroll-behavior:auto}
-  .js .rv{opacity:1;transform:none;transition:none}
-}
-</style></head><body>
-<canvas id="sky"></canvas>
-<header><div class="hw">
-  <div class="lock">
-    <svg class="mk" viewBox="0 0 52 52" fill="none"><g stroke="#e3e8ec" stroke-width="2.6" stroke-linejoin="round"><path d="M26 34 L42 42 L26 50 L10 42 Z"/><path d="M26 24 L42 32 L26 40 L10 32 Z"/><path d="M26 14 L42 22 L26 30 L10 22 Z" stroke="#eb6200"/></g></svg>
-    <span class="nm">SMBai</span><span class="divr"></span><span class="by">powered&nbsp;by</span><svg class="siwm" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 11737.4 980.0" role="img" aria-label="Silent Intelligence"> <path class="wm-silent" fill="currentColor" d="M176 632.0L24 632.0Q23 698.0 48.0 746.0Q73 794.0 115.5 825.0Q158 856.0 213.5 870.5Q269 885.0 328 885.0Q401 885.0 456.5 868.0Q512 851.0 549.5 820.5Q587 790.0 606.0 748.0Q625 706.0 625 657.0Q625 597.0 599.5 558.5Q574 520.0 539.0 497.0Q504 474.0 468.5 463.5Q433 453.0 413 449.0Q346 432.0 304.5 421.0Q263 410.0 239.5 399.0Q216 388.0 208.0 375.0Q200 362.0 200 341.0Q200 318.0 210.0 303.0Q220 288.0 235.5 278.0Q251 268.0 270.0 264.0Q289 260.0 308 260.0Q337 260.0 361.5 265.0Q386 270.0 405.0 282.0Q424 294.0 435.5 315.0Q447 336.0 449 368.0L601 368.0Q601 306.0 577.5 262.5Q554 219.0 514.0 191.0Q474 163.0 422.5 150.5Q371 138.0 315 138.0Q267 138.0 219.0 151.0Q171 164.0 133.0 191.0Q95 218.0 71.5 258.5Q48 299.0 48 354.0Q48 403.0 66.5 437.5Q85 472.0 115.0 495.0Q145 518.0 183.0 532.5Q221 547.0 261 557.0Q300 568.0 338.0 577.0Q376 586.0 406.0 598.0Q436 610.0 454.5 628.0Q473 646.0 473 675.0Q473 702.0 459.0 719.5Q445 737.0 424.0 747.0Q403 757.0 379.0 760.5Q355 764.0 334 764.0Q303 764.0 274.0 756.5Q245 749.0 223.5 733.5Q202 718.0 189.0 693.0Q176 668.0 176 632.0ZM733 155.0L733 869.0L890 869.0L890 155.0L733 155.0ZM1043 155.0L1043 869.0L1548 869.0L1548 737.0L1200 737.0L1200 155.0L1043 155.0ZM1651 155.0L1651 869.0L2193 869.0L2193 737.0L1808 737.0L1808 562.0L2154 562.0L2154 440.0L1808 440.0L1808 287.0L2185 287.0L2185 155.0L1651 155.0ZM2314 155.0L2314 869.0L2461 869.0L2461 391.0L2463 391.0L2760 869.0L2917 869.0L2917 155.0L2770 155.0L2770 634.0L2768 634.0L2470 155.0L2314 155.0ZM3228 287.0L3228 869.0L3385 869.0L3385 287.0L3599 287.0L3599 155.0L3014 155.0L3014 287.0L3228 287.0Z"/> <path class="wm-intel" fill="#6E6E6E" d="M4354.4 352.0L4354.4 869.0L4496.4 869.0L4496.4 352.0L4354.4 352.0ZM4638.4 155.0L4638.4 869.0L4785.4 869.0L4785.4 391.0L4787.4 391.0L5084.4 869.0L5241.4 869.0L5241.4 155.0L5094.4 155.0L5094.4 634.0L5092.4 634.0L4794.4 155.0L4638.4 155.0ZM5552.4 287.0L5552.4 869.0L5709.4 869.0L5709.4 287.0L5923.4 287.0L5923.4 155.0L5338.4 155.0L5338.4 287.0L5552.4 287.0ZM6020.4 155.0L6020.4 869.0L6562.4 869.0L6562.4 737.0L6177.4 737.0L6177.4 562.0L6523.4 562.0L6523.4 440.0L6177.4 440.0L6177.4 287.0L6554.4 287.0L6554.4 155.0L6020.4 155.0ZM6683.4 155.0L6683.4 869.0L7188.4 869.0L7188.4 737.0L6840.4 737.0L6840.4 155.0L6683.4 155.0ZM7291.4 155.0L7291.4 869.0L7796.4 869.0L7796.4 737.0L7448.4 737.0L7448.4 155.0L7291.4 155.0ZM7899.4 155.0L7899.4 869.0L8056.4 869.0L8056.4 155.0L7899.4 155.0ZM8725.4 788.0L8741.4 869.0L8841.4 869.0L8841.4 483.0L8541.4 483.0L8541.4 600.0L8699.4 600.0Q8692.4 675.0 8649.9 714.5Q8607.4 754.0 8529.4 754.0Q8476.4 754.0 8439.4 733.5Q8402.4 713.0 8379.4 679.0Q8356.4 645.0 8345.9 602.5Q8335.4 560.0 8335.4 515.0Q8335.4 468.0 8345.9 424.0Q8356.4 380.0 8379.4 345.5Q8402.4 311.0 8439.4 290.5Q8476.4 270.0 8529.4 270.0Q8586.4 270.0 8626.4 300.0Q8666.4 330.0 8680.4 390.0L8830.4 390.0Q8824.4 329.0 8797.4 282.0Q8770.4 235.0 8728.9 203.0Q8687.4 171.0 8635.9 154.5Q8584.4 138.0 8529.4 138.0Q8447.4 138.0 8381.9 167.0Q8316.4 196.0 8271.4 247.0Q8226.4 298.0 8202.4 366.5Q8178.4 435.0 8178.4 515.0Q8178.4 593.0 8202.4 660.5Q8226.4 728.0 8271.4 778.0Q8316.4 828.0 8381.9 856.5Q8447.4 885.0 8529.4 885.0Q8581.4 885.0 8632.4 863.5Q8683.4 842.0 8725.4 788.0ZM8983.4 155.0L8983.4 869.0L9525.4 869.0L9525.4 737.0L9140.4 737.0L9140.4 562.0L9486.4 562.0L9486.4 440.0L9140.4 440.0L9140.4 287.0L9517.4 287.0L9517.4 155.0L8983.4 155.0ZM9646.4 155.0L9646.4 869.0L9793.4 869.0L9793.4 391.0L9795.4 391.0L10092.4 869.0L10249.4 869.0L10249.4 155.0L10102.4 155.0L10102.4 634.0L10100.4 634.0L9802.4 155.0L9646.4 155.0ZM10878.4 395.0L11030.4 395.0Q11023.4 333.0 10996.4 285.0Q10969.4 237.0 10927.9 204.5Q10886.4 172.0 10833.9 155.0Q10781.4 138.0 10722.4 138.0Q10640.4 138.0 10574.9 167.0Q10509.4 196.0 10464.4 247.0Q10419.4 298.0 10395.4 366.5Q10371.4 435.0 10371.4 515.0Q10371.4 593.0 10395.4 660.5Q10419.4 728.0 10464.4 778.0Q10509.4 828.0 10574.9 856.5Q10640.4 885.0 10722.4 885.0Q10788.4 885.0 10843.4 865.0Q10898.4 845.0 10939.4 807.0Q10980.4 769.0 11005.4 715.0Q11030.4 661.0 11036.4 594.0L10884.4 594.0Q10875.4 666.0 10834.9 710.0Q10794.4 754.0 10722.4 754.0Q10669.4 754.0 10632.4 733.5Q10595.4 713.0 10572.4 679.0Q10549.4 645.0 10538.9 602.5Q10528.4 560.0 10528.4 515.0Q10528.4 468.0 10538.9 424.0Q10549.4 380.0 10572.4 345.5Q10595.4 311.0 10632.4 290.5Q10669.4 270.0 10722.4 270.0Q10751.4 270.0 10777.9 279.5Q10804.4 289.0 10825.4 306.0Q10846.4 323.0 10860.4 345.5Q10874.4 368.0 10878.4 395.0ZM11158.4 155.0L11158.4 869.0L11700.4 869.0L11700.4 737.0L11315.4 737.0L11315.4 562.0L11661.4 562.0L11661.4 440.0L11315.4 440.0L11315.4 287.0L11692.4 287.0L11692.4 155.0L11158.4 155.0Z"/> <rect class="wm-rule" x="3967" y="0.0" width="29.4" height="980" fill="#9A9A9A"/> <rect class="wm-dot" x="4322.4" y="122.0" width="142" height="150" fill="#E35205"/> </svg>
-  </div>
-  <a class="cta-sm" href="#close">Book a conversation</a>
-</div></header>
-
-<nav class="dots" aria-label="Sections">
-  <a href="#hero" data-t="hero" class="on"></a><a href="#genius" data-t="genius"></a><a href="#today" data-t="today"></a>
-  <a href="#separate" data-t="separate"></a><a href="#how" data-t="how"></a><a href="#why" data-t="why"></a>
-  <a href="#begin" data-t="begin"></a><a href="#modules" data-t="modules"></a><a href="#built" data-t="built"></a>
-  <a href="#changes" data-t="changes"></a><a href="#close" data-t="close"></a>
-</nav>
+  @media (max-width:900px){
+    #hero .wrap,.wheel,.cmp,.mods,#close .wrap{grid-template-columns:1fr}
+    .three,.stages,.layers,.stats{grid-template-columns:1fr;gap:22px}
+    .flow{grid-template-columns:1fr}.flow svg{max-height:220px}
+    .core{width:60vw}.dots{display:none}
+    html{scroll-snap-type:none}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none!important;transition:none!important}
+    .r,.grow{opacity:1;transform:none}.dash{stroke-dashoffset:0}
+  }
+</style>
+</head>
+<body>
+<canvas id="sky" aria-hidden="true"></canvas>
+<div id="neb" aria-hidden="true"></div>
+<div class="brand"><svg class="mk" viewBox="0 0 52 52" fill="none"><g stroke="#F2F4FA" stroke-width="2.6" stroke-linejoin="round"><path d="M26 34 L42 42 L26 50 L10 42 Z"/><path d="M26 24 L42 32 L26 40 L10 32 Z"/><path d="M26 14 L42 22 L26 30 L10 22 Z" stroke="#EB6200"/></g></svg><span class="nm">SMBai</span><span class="divr"></span><span class="by">powered&nbsp;by</span><svg class="siwm" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 11737.4 980.0" role="img" aria-label="Silent Intelligence"> <path class="wm-silent" fill="currentColor" d="M176 632.0L24 632.0Q23 698.0 48.0 746.0Q73 794.0 115.5 825.0Q158 856.0 213.5 870.5Q269 885.0 328 885.0Q401 885.0 456.5 868.0Q512 851.0 549.5 820.5Q587 790.0 606.0 748.0Q625 706.0 625 657.0Q625 597.0 599.5 558.5Q574 520.0 539.0 497.0Q504 474.0 468.5 463.5Q433 453.0 413 449.0Q346 432.0 304.5 421.0Q263 410.0 239.5 399.0Q216 388.0 208.0 375.0Q200 362.0 200 341.0Q200 318.0 210.0 303.0Q220 288.0 235.5 278.0Q251 268.0 270.0 264.0Q289 260.0 308 260.0Q337 260.0 361.5 265.0Q386 270.0 405.0 282.0Q424 294.0 435.5 315.0Q447 336.0 449 368.0L601 368.0Q601 306.0 577.5 262.5Q554 219.0 514.0 191.0Q474 163.0 422.5 150.5Q371 138.0 315 138.0Q267 138.0 219.0 151.0Q171 164.0 133.0 191.0Q95 218.0 71.5 258.5Q48 299.0 48 354.0Q48 403.0 66.5 437.5Q85 472.0 115.0 495.0Q145 518.0 183.0 532.5Q221 547.0 261 557.0Q300 568.0 338.0 577.0Q376 586.0 406.0 598.0Q436 610.0 454.5 628.0Q473 646.0 473 675.0Q473 702.0 459.0 719.5Q445 737.0 424.0 747.0Q403 757.0 379.0 760.5Q355 764.0 334 764.0Q303 764.0 274.0 756.5Q245 749.0 223.5 733.5Q202 718.0 189.0 693.0Q176 668.0 176 632.0ZM733 155.0L733 869.0L890 869.0L890 155.0L733 155.0ZM1043 155.0L1043 869.0L1548 869.0L1548 737.0L1200 737.0L1200 155.0L1043 155.0ZM1651 155.0L1651 869.0L2193 869.0L2193 737.0L1808 737.0L1808 562.0L2154 562.0L2154 440.0L1808 440.0L1808 287.0L2185 287.0L2185 155.0L1651 155.0ZM2314 155.0L2314 869.0L2461 869.0L2461 391.0L2463 391.0L2760 869.0L2917 869.0L2917 155.0L2770 155.0L2770 634.0L2768 634.0L2470 155.0L2314 155.0ZM3228 287.0L3228 869.0L3385 869.0L3385 287.0L3599 287.0L3599 155.0L3014 155.0L3014 287.0L3228 287.0Z"/> <path class="wm-intel" fill="#6E6E6E" d="M4354.4 352.0L4354.4 869.0L4496.4 869.0L4496.4 352.0L4354.4 352.0ZM4638.4 155.0L4638.4 869.0L4785.4 869.0L4785.4 391.0L4787.4 391.0L5084.4 869.0L5241.4 869.0L5241.4 155.0L5094.4 155.0L5094.4 634.0L5092.4 634.0L4794.4 155.0L4638.4 155.0ZM5552.4 287.0L5552.4 869.0L5709.4 869.0L5709.4 287.0L5923.4 287.0L5923.4 155.0L5338.4 155.0L5338.4 287.0L5552.4 287.0ZM6020.4 155.0L6020.4 869.0L6562.4 869.0L6562.4 737.0L6177.4 737.0L6177.4 562.0L6523.4 562.0L6523.4 440.0L6177.4 440.0L6177.4 287.0L6554.4 287.0L6554.4 155.0L6020.4 155.0ZM6683.4 155.0L6683.4 869.0L7188.4 869.0L7188.4 737.0L6840.4 737.0L6840.4 155.0L6683.4 155.0ZM7291.4 155.0L7291.4 869.0L7796.4 869.0L7796.4 737.0L7448.4 737.0L7448.4 155.0L7291.4 155.0ZM7899.4 155.0L7899.4 869.0L8056.4 869.0L8056.4 155.0L7899.4 155.0ZM8725.4 788.0L8741.4 869.0L8841.4 869.0L8841.4 483.0L8541.4 483.0L8541.4 600.0L8699.4 600.0Q8692.4 675.0 8649.9 714.5Q8607.4 754.0 8529.4 754.0Q8476.4 754.0 8439.4 733.5Q8402.4 713.0 8379.4 679.0Q8356.4 645.0 8345.9 602.5Q8335.4 560.0 8335.4 515.0Q8335.4 468.0 8345.9 424.0Q8356.4 380.0 8379.4 345.5Q8402.4 311.0 8439.4 290.5Q8476.4 270.0 8529.4 270.0Q8586.4 270.0 8626.4 300.0Q8666.4 330.0 8680.4 390.0L8830.4 390.0Q8824.4 329.0 8797.4 282.0Q8770.4 235.0 8728.9 203.0Q8687.4 171.0 8635.9 154.5Q8584.4 138.0 8529.4 138.0Q8447.4 138.0 8381.9 167.0Q8316.4 196.0 8271.4 247.0Q8226.4 298.0 8202.4 366.5Q8178.4 435.0 8178.4 515.0Q8178.4 593.0 8202.4 660.5Q8226.4 728.0 8271.4 778.0Q8316.4 828.0 8381.9 856.5Q8447.4 885.0 8529.4 885.0Q8581.4 885.0 8632.4 863.5Q8683.4 842.0 8725.4 788.0ZM8983.4 155.0L8983.4 869.0L9525.4 869.0L9525.4 737.0L9140.4 737.0L9140.4 562.0L9486.4 562.0L9486.4 440.0L9140.4 440.0L9140.4 287.0L9517.4 287.0L9517.4 155.0L8983.4 155.0ZM9646.4 155.0L9646.4 869.0L9793.4 869.0L9793.4 391.0L9795.4 391.0L10092.4 869.0L10249.4 869.0L10249.4 155.0L10102.4 155.0L10102.4 634.0L10100.4 634.0L9802.4 155.0L9646.4 155.0ZM10878.4 395.0L11030.4 395.0Q11023.4 333.0 10996.4 285.0Q10969.4 237.0 10927.9 204.5Q10886.4 172.0 10833.9 155.0Q10781.4 138.0 10722.4 138.0Q10640.4 138.0 10574.9 167.0Q10509.4 196.0 10464.4 247.0Q10419.4 298.0 10395.4 366.5Q10371.4 435.0 10371.4 515.0Q10371.4 593.0 10395.4 660.5Q10419.4 728.0 10464.4 778.0Q10509.4 828.0 10574.9 856.5Q10640.4 885.0 10722.4 885.0Q10788.4 885.0 10843.4 865.0Q10898.4 845.0 10939.4 807.0Q10980.4 769.0 11005.4 715.0Q11030.4 661.0 11036.4 594.0L10884.4 594.0Q10875.4 666.0 10834.9 710.0Q10794.4 754.0 10722.4 754.0Q10669.4 754.0 10632.4 733.5Q10595.4 713.0 10572.4 679.0Q10549.4 645.0 10538.9 602.5Q10528.4 560.0 10528.4 515.0Q10528.4 468.0 10538.9 424.0Q10549.4 380.0 10572.4 345.5Q10595.4 311.0 10632.4 290.5Q10669.4 270.0 10722.4 270.0Q10751.4 270.0 10777.9 279.5Q10804.4 289.0 10825.4 306.0Q10846.4 323.0 10860.4 345.5Q10874.4 368.0 10878.4 395.0ZM11158.4 155.0L11158.4 869.0L11700.4 869.0L11700.4 737.0L11315.4 737.0L11315.4 562.0L11661.4 562.0L11661.4 440.0L11315.4 440.0L11315.4 287.0L11692.4 287.0L11692.4 155.0L11158.4 155.0Z"/> <rect class="wm-rule" x="3967" y="0.0" width="29.4" height="980" fill="#9A9A9A"/> <rect class="wm-dot" x="4322.4" y="122.0" width="142" height="150" fill="#E35205"/> </svg></div>
+<nav class="dots" aria-label="Sections"></nav>
 
 <main>
-<section class="scene" id="hero"><div class="wrap">
-  <p class="eyb">SMBai, powered by Silent Intelligence</p>
-  <h1>A self-reinforcing <em>knowledge engine</em></h1>
-  <p class="lede">Marketing teams do not have a tools problem. They have a memory problem. This is the layer that separates what your organization knows from what it produces, so context stops evaporating the moment a project ends.</p>
-  <div class="scrollcue"><span></span> Scroll</div>
-</div></section>
 
-<section class="scene" id="genius"><div class="wrap rv">
-  <p class="kick">The problem, in one picture</p>
-  <h2>Imagine hiring a genius.</h2>
-  <div class="prose">
-    <p>Engineer, marketer, designer, strategist. Hand them the right folder and they become the best in the world at it, instantly.</p>
-    <p>One catch. <b>They have no long-term memory.</b> Close the folder and it is gone: the case study, the pricing logic, the slide you loved, the way your team actually does things.</p>
-    <p>That is every AI model available to you today. A knowledge engine is the set of folders you never have to hand over twice.</p>
+<!-- 1 HERO -->
+<section class="scene on" id="hero">
+  <div class="wrap">
+    <div>
+      <p class="tag r"><b>SMBai</b>, powered by <b>Silent Intelligence</b></p>
+      <h1 class="r">The Engine</h1>
+      <p class="big r">Your business, with a memory.</p>
+      <p class="lead r">A firm-owned AI that never forgets how you work - and turns that knowledge into every deck, proposal, page and post you need.</p>
+    </div>
+    <div class="core r" aria-hidden="true">
+      <svg viewBox="0 0 400 400">
+        <defs>
+          <radialGradient id="g1"><stop offset="0" stop-color="#7CF5C9" stop-opacity=".9"/><stop offset="1" stop-color="#7CF5C9" stop-opacity="0"/></radialGradient>
+          <filter id="glow"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        </defs>
+        <circle class="pulse" cx="200" cy="200" r="120" fill="url(#g1)"/>
+        <circle cx="200" cy="200" r="58" fill="#7CF5C9"/>
+        <text x="200" y="206" text-anchor="middle" font-size="16" font-weight="700" fill="#05070D" letter-spacing="2">THE ENGINE</text>
+        <g class="orbit" fill="none" stroke="#1E2540" stroke-width="1">
+          <circle cx="200" cy="200" r="150" stroke-dasharray="3 9"/>
+          <g id="sat"></g>
+        </g>
+      </svg>
+    </div>
   </div>
-</div></section>
+  <div class="scroll-hint"><span>scroll</span><i></i></div>
+</section>
 
-<section class="scene" id="today"><div class="wrap rv">
-  <p class="kick">Where the knowledge lives now</p>
-  <h2>In someone's head, last year's deck, and a folder nobody can find</h2>
-  <div class="cols3">
-    <div><div class="n">01</div><span class="q">"I need the deck updated with the right case studies."</span><h3>It sits with one person</h3><p>The only search engine for what the organization knows is a founder's or a director's memory. It does not transfer and it does not scale.</p></div>
-    <div><div class="n">02</div><span class="q">"There was this really good slide somewhere."</span><h3>Every output starts from zero</h3><p>Proposals, decks, posts and pages get rebuilt because the last version is lost, off brand, or buried in someone's downloads.</p></div>
-    <div><div class="n">03</div><span class="q">"We had to pass on that one."</span><h3>Capacity caps revenue</h3><p>Seven proposals land in a week and work gets turned down, or billable people come off billable projects to write them. You cannot hire your way out of a spike.</p></div>
+<!-- 2 STORY -->
+<section class="scene" id="story">
+  <div class="wrap">
+    <h2 class="r">Imagine hiring a genius.</h2>
+    <p class="lead r">Engineer, marketer, designer, strategist. Hand them the right folder and they become the best in the world at it — instantly.</p>
+    <p class="big r"><span class="signal">One catch.</span> They have no long-term memory. Close the folder and it's gone: the case study, the pricing logic, the slide you loved, how your firm actually does things.</p>
+    <p class="lead r" style="color:var(--star)">That's every AI model. The Engine is the set of folders you never have to hand over twice.</p>
   </div>
-</div></section>
+</section>
 
-<section class="scene" id="separate"><div class="wrap rv">
-  <p class="kick">The idea</p>
-  <h2>Separate what you <em>know</em> from what you <em>make</em></h2>
-  <p class="sub">Knowledge is the durable asset. Outputs are only what it becomes today. Most organizations store the second and lose the first.</p>
-  <div class="split">
-    <div class="col k"><h4>What you know</h4><ul>
-      <li>Firm profile and positioning</li><li>Client and audience profiles</li><li>How the work actually gets done</li><li>Voice, brand, design system</li><li>Case studies and proof</li><li>Frameworks and pricing logic</li></ul></div>
-    <div><div class="hub">KNOWLEDGE<br><b>ENGINE</b></div></div>
-    <div class="col o"><h4>What you make</h4><ul>
-      <li>Proposals and pitches</li><li>Board and sales decks</li><li>Websites and landing pages</li><li>Social and campaign content</li><li>White papers and reports</li><li>Podcast and video packaging</li></ul></div>
+<!-- 3 PROBLEM -->
+<section class="scene" id="problem">
+  <div class="wrap">
+    <h2 class="r">Where the knowledge actually lives today</h2>
+    <p class="lead r">In people's heads, in last year's deck, and in the folder nobody can find.</p>
+    <div class="three r">
+      <div><h3>It's in one person</h3><p><q>I need the deck updated with the right case studies</q> — and the only search engine for that is the founder's memory. It doesn't transfer, and it doesn't scale.</p></div>
+      <div><h3>Every output starts from zero</h3><p><q>There was this really good slide…</q> Proposals, decks, posts and pages get rebuilt because the last version is lost, off-brand, or buried in someone's downloads.</p></div>
+      <div><h3>Capacity caps revenue</h3><p>Seven proposals land in a week and work gets turned down — or billable people get pulled off billable projects to write them. You can't hire your way out.</p></div>
+    </div>
   </div>
-  <p class="note">It lives in your own drive, under your own access controls. Not in a vendor's cloud, and not somewhere you cannot audit.</p>
-</div></section>
+</section>
 
-<section class="scene" id="how"><div class="wrap rv">
-  <p class="kick">How it works</p>
-  <h2>Each cycle makes the next one faster</h2>
-  <p class="sub">The engine is self-reinforcing because finished work feeds back into it. Every approved output deposits reusable knowledge instead of consuming it.</p>
-  <div class="flow">
-    <div><div class="n">1</div><h3>Capture</h3><p>We interview the team and pull in the decks, proposals, site and past work that already carry your thinking.</p></div>
-    <div><div class="n">2</div><h3>Structure</h3><p>Organized by function into folders in your own drive, in a shape both people and AI tools can read.</p></div>
-    <div><div class="n">3</div><h3>Connect</h3><p>Point the AI tools you already use at it. Every session starts by loading the right context automatically.</p></div>
-    <div><div class="n">4</div><h3>Generate</h3><p>Ask for the deck, the proposal, the campaign. What comes back is yours, not something generic.</p></div>
-    <div><div class="n">5</div><h3>Learn back</h3><p>Approved work returns to the knowledge base. The engine gets sharper with use rather than staler.</p></div>
+<!-- 4 INSIGHT / FLOW -->
+<section class="scene" id="insight">
+  <div class="wrap">
+    <h2 class="r">Separate what you know from what you make</h2>
+    <p class="lead r">Knowledge is the asset. Outputs are just what it becomes today - and every approved output feeds back in, which is what makes the engine self-reinforcing.</p>
+    <div class="flow r">
+      <div class="col">
+        <h4 class="signal">What you know</h4>
+        <div class="chip">Firm profile &amp; positioning</div>
+        <div class="chip">Client &amp; audience profiles</div>
+        <div class="chip">How we actually work</div>
+        <div class="chip">Voice, brand, design system</div>
+        <div class="chip">Case studies &amp; proof</div>
+        <div class="chip">Frameworks &amp; pricing logic</div>
+      </div>
+      <svg viewBox="0 0 400 430" aria-hidden="true" id="flowsvg">
+        <defs>
+          <radialGradient id="g2"><stop offset="0" stop-color="#7CF5C9" stop-opacity=".7"/><stop offset="1" stop-color="#7CF5C9" stop-opacity="0"/></radialGradient>
+        </defs>
+        <g id="inlines" fill="none" stroke="#2A3556" stroke-width="1"></g>
+        <g id="outlines" fill="none" stroke="rgba(255,180,84,.45)" stroke-width="1"></g>
+        <g id="backlines" fill="none" stroke="rgba(124,245,201,.42)" stroke-width="1.4" stroke-dasharray="5 6"></g>
+        <g id="backparticles"></g>
+        <text x="200" y="418" text-anchor="middle" font-size="10.5" fill="#7CF5C9" letter-spacing="1.6" opacity=".85">APPROVED WORK RETURNS AS KNOWLEDGE</text>
+        <circle cx="200" cy="180" r="95" fill="url(#g2)" class="pulse"/>
+        <circle cx="200" cy="180" r="50" fill="#7CF5C9"/>
+        <text x="200" y="176" text-anchor="middle" font-size="13" font-weight="700" fill="#05070D">THE</text>
+        <text x="200" y="192" text-anchor="middle" font-size="12" font-weight="700" fill="#05070D">ENGINE</text>
+        <g id="particles"></g>
+      </svg>
+      <div class="col">
+        <h4 class="out">What you make</h4>
+        <div class="chip o">Proposals</div>
+        <div class="chip o">Board &amp; sales decks</div>
+        <div class="chip o">Websites &amp; landing pages</div>
+        <div class="chip o">Social content</div>
+        <div class="chip o">White papers &amp; reports</div>
+        <div class="chip o">Podcast &amp; video packaging</div>
+      </div>
+    </div>
+    <p class="note r">It lives in your drive. Not in a vendor's cloud.</p>
   </div>
-</div></section>
+</section>
 
-<section class="scene" id="why"><div class="wrap rv">
-  <p class="kick">Why not an off the shelf skill</p>
-  <h2>Generic context gives generic results</h2>
-  <p class="sub">The marketplaces sell capability. What decides the quality of an output is context, and nobody can sell you yours.</p>
-  <div class="cmp">
-    <div class="side off"><h3>A marketplace skill</h3><ul>
-      <li>Built for everyone, so built for no one</li><li>The same output any competitor can buy</li>
-      <li>Knows nothing about your clients, pricing, voice or process</li><li>Hard to connect if you are not technical</li>
-      <li>You rent the capability</li></ul></div>
-    <div class="side own"><h3>A skill built from your knowledge</h3><ul>
-      <li>Generated from your own context and the framework you choose</li><li>Runs your proposal, your deck, your content, consistently</li>
-      <li>Improves as the knowledge base grows</li><li>Set up by us, then run by your team</li>
-      <li>You own the knowledge and the skill</li></ul></div>
+<!-- 5 FLYWHEEL -->
+<section class="scene" id="flywheel">
+  <div class="wrap">
+    <h2 class="r">The knowledge flywheel</h2>
+    <p class="lead r">Every output makes the next one faster, more consistent, more on-brand.</p>
+    <div class="wheel r">
+      <svg viewBox="0 0 460 460" aria-hidden="true">
+        <defs><radialGradient id="g3"><stop offset="0" stop-color="#7CF5C9" stop-opacity=".6"/><stop offset="1" stop-color="#7CF5C9" stop-opacity="0"/></radialGradient></defs>
+        <circle cx="230" cy="230" r="150" fill="none" stroke="#1E2540" stroke-width="1" stroke-dasharray="4 10" class="cring"/>
+        <circle cx="230" cy="230" r="80" fill="url(#g3)" class="pulse"/>
+        <circle cx="230" cy="230" r="40" fill="#7CF5C9"/>
+        <g class="ring" id="ringnodes"></g>
+      </svg>
+      <div class="steps">
+        <div class="step"><b>1</b><div><h3>Capture</h3><p>We interview the firm and pull your decks, proposals, site and past work.</p></div></div>
+        <div class="step"><b>2</b><div><h3>Structure</h3><p>Organized into folders your agents can read — by function, in your own drive.</p></div></div>
+        <div class="step"><b>3</b><div><h3>Point</h3><p>Connect Claude, Codex or Gemini. A session-start harness loads the right context every time.</p></div></div>
+        <div class="step"><b>4</b><div><h3>Generate</h3><p>Ask for the deck, the proposal, the post. Get yours — not something generic.</p></div></div>
+        <div class="step"><b>5</b><div><h3>Learn back</h3><p>Approved outputs feed the knowledge base. The Engine gets sharper.</p></div></div>
+      </div>
+    </div>
   </div>
-</div></section>
+</section>
 
-<section class="scene" id="begin"><div class="wrap rv">
-  <p class="kick">Where to begin</p>
-  <h2>The vision is the whole engine. The entry is <em>one task</em>.</h2>
-  <p class="sub">If there were one task you never had to do again, what would it be? That is the question the first conversation answers.</p>
-  <div class="trio">
-    <div><div class="tag">Quick win</div><h3>Solve one problem</h3><p>Pick the workflow that steals the most time. Build the context for it. Ship in weeks rather than quarters.</p></div>
-    <div><div class="tag">Expand</div><h3>Fix the next one</h3><p>Each workflow adds folders to the same engine, so the second problem takes less work than the first.</p></div>
-    <div><div class="tag">The engine</div><h3>Run the organization</h3><p>Marketing, operations, sales and delivery all drawing on one knowledge base that the organization owns.</p></div>
+<!-- 6 COMPARE -->
+<section class="scene" id="compare">
+  <div class="wrap">
+    <h2 class="r">Not a $900 skill from a marketplace</h2>
+    <p class="lead r">Generic skills give generic results. Skills built from your context give you.</p>
+    <div class="cmp r">
+      <div>
+        <h3>A marketplace skill</h3>
+        <ul>
+          <li>Built for everyone, so built for no one</li>
+          <li>Same output any competitor can buy</li>
+          <li>Knows nothing about your clients, pricing, voice or process</li>
+          <li>Overwhelming to connect if you're not technical</li>
+          <li>You rent the capability</li>
+        </ul>
+      </div>
+      <div class="me">
+        <h3 class="signal">A skill built from your Engine</h3>
+        <ul>
+          <li>Generated from your firm's context and the framework you choose</li>
+          <li>Runs your proposal, your deck, your content — consistently</li>
+          <li>Improves as your knowledge base grows</li>
+          <li>Set up once by us, used forever by you</li>
+          <li>You own the knowledge and the skill</li>
+        </ul>
+      </div>
+    </div>
   </div>
-</div></section>
+</section>
 
-<section class="scene" id="modules"><div class="wrap rv">
-  <p class="kick">The first modules</p>
-  <h2>Where teams usually start</h2>
-  <p class="sub">Each one is a self-contained part of the engine, and each one is small enough to judge on its own.</p>
-  <div class="quad">
-    <div><div class="bar"></div><h3>Proposal Engine</h3><p>Consistent structure, your pricing logic, a clear approval path. Volume spikes stop forcing a choice between turning work down and pulling people off billable projects.</p></div>
-    <div><div class="bar"></div><h3>Deck Builder</h3><p>Board updates, launches, sales decks, rebrand rollouts. Built on your template, your assets and your proof rather than assembled from scratch.</p></div>
-    <div><div class="bar"></div><h3>Content Studio</h3><p>Podcast cuts, subtitles, social packaging, blog drafts. The high volume, low complexity work that quietly eats margin.</p></div>
-    <div><div class="bar"></div><h3>Ghostwriter</h3><p>A founder or executive voice, captured once. Posts, newsletters and thought leadership that read like the person because they are built from them.</p></div>
+<!-- 7 PATHWAY -->
+<section class="scene" id="start">
+  <div class="wrap">
+    <h2 class="r">Where we start</h2>
+    <p class="lead r">If there's one task you could never do again, what would it be?</p>
+    <div class="path r">
+      <svg viewBox="0 0 1100 120" aria-hidden="true">
+        <line class="dash" x1="60" y1="60" x2="1040" y2="60" stroke="#7CF5C9" stroke-width="1.5"/>
+        <g class="grow"><circle cx="60" cy="60" r="34" fill="#7CF5C9" opacity=".12"/><circle cx="60" cy="60" r="12" fill="#7CF5C9"/></g>
+        <g class="grow"><circle cx="550" cy="60" r="50" fill="#7CF5C9" opacity=".12"/><circle cx="550" cy="60" r="22" fill="#7CF5C9"/></g>
+        <g class="grow"><circle cx="1040" cy="60" r="60" fill="#7CF5C9" opacity=".12"/><circle cx="1040" cy="60" r="36" fill="#7CF5C9"/></g>
+      </svg>
+      <div class="stages">
+        <div><small>Quick win</small><h3>Solve one problem</h3><p>Pick the workflow that steals the most time. Build the context for it. Ship in weeks, not quarters.</p></div>
+        <div><small>Expand</small><h3>Fix the next one</h3><p>Each workflow adds folders to the same Engine. The second problem is faster than the first.</p></div>
+        <div><small>The Engine</small><h3>Run the organization</h3><p>Marketing, ops, sales, delivery — all drawing from one owned knowledge base.</p></div>
+      </div>
+    </div>
+    <div class="pull r">The vision is the whole Engine. The entry is one task you never do again.</div>
   </div>
-</div></section>
+</section>
 
-<section class="scene" id="built"><div class="wrap rv">
-  <p class="kick">How it is built</p>
-  <h2>Foundation first, capabilities after</h2>
-  <div class="trio">
-    <div><div class="tag">Foundation</div><h3>Context capture</h3><p>The knowledge base itself, structured and owned by you.</p><ul><li>Discovery interviews and asset ingestion</li><li>Folder architecture in your drive</li><li>Session start and tool connections</li><li>The first quick win workflow</li></ul><div class="shape">One time setup</div></div>
-    <div><div class="tag">Capabilities</div><h3>Modules</h3><p>Add what you need, when you need it.</p><ul><li>Proposal Engine</li><li>Deck Builder</li><li>Content Studio</li><li>Ghostwriter</li><li>Custom workflow modules</li></ul><div class="shape">Per module</div></div>
-    <div><div class="tag">Full engine</div><h3>The organization</h3><p>One knowledge base running every function.</p><ul><li>Marketing, sales, operations, delivery</li><li>Quarterly knowledge refresh</li><li>New hires onboard from the engine</li><li>Governance and access controls</li></ul><div class="shape">Ongoing</div></div>
+<!-- 8 MODULES -->
+<section class="scene" id="modules">
+  <div class="wrap">
+    <h2 class="r">Quick wins we already know work</h2>
+    <p class="lead r">Each one is a self-contained module of the Engine — and a proof point.</p>
+    <div class="mods r">
+      <div class="mod"><h3>Proposal Engine</h3><p>Never turn down a bid for lack of hands. Consistent structure, your pricing logic, approval in one-two-three. Billable people stay billable.</p></div>
+      <div class="mod"><h3>Deck Builder</h3><p>Board updates, product launches, sales decks, rebrand rollouts — built on your template, your assets, your proof. An eight-hour fire drill becomes an hour.</p></div>
+      <div class="mod"><h3>Content Studio</h3><p>Podcast cuts, subtitles, social packaging, blog drafts — the high-volume, low-complexity work that quietly eats margin.</p></div>
+      <div class="mod"><h3>Ghostwriter</h3><p>Founder voice, captured once. Posts, newsletters and thought leadership that sound like you because they're built from you.</p></div>
+    </div>
   </div>
-</div></section>
+</section>
 
-<section class="scene" id="changes"><div class="wrap rv">
-  <p class="kick">What changes</p>
-  <h2>Capacity without headcount</h2>
-  <p class="sub">We are not going to quote you someone else's numbers. Here is what the structure changes, and you can judge whether it is worth measuring in your own business.</p>
-  <div class="pays">
-    <div><h3>A volume spike stops costing you revenue</h3><p>When proposals can be produced without pulling billable people off billable work, a busy week stops being a choice between lost work and lost margin.</p></div>
-    <div><h3>One source of truth, findable by anyone</h3><p>The best slide, the right case study, the current pricing. Not in a person's memory, and not in a folder only one person can navigate.</p></div>
-    <div><h3>Small accounts stop losing money</h3><p>Work that has to be staffed carries a cost floor. Work generated from your own context does not, which changes which accounts are worth taking.</p></div>
-    <div><h3>The work compounds instead of repeating</h3><p>Today most knowledge work is rebuilt from scratch. Here each finished piece leaves something behind that the next one starts from.</p></div>
+<!-- 9 LAYERS -->
+<section class="scene" id="product">
+  <div class="wrap">
+    <h2 class="r">Build your Engine in layers</h2>
+    <p class="lead r">Foundation first. Add capabilities as you go. Own the whole thing.</p>
+    <div class="layers r">
+      <div class="layer"><small>Foundation</small><h3>Context Capture</h3><p>The firm's knowledge base, structured and owned.</p>
+        <ul><li>Discovery interviews and asset ingestion</li><li>Folder architecture in your drive</li><li>Agent harness, session-start, connectors</li><li>First quick-win workflow</li></ul><em>One-time setup</em></div>
+      <div class="layer"><small>Capabilities</small><h3>Modules</h3><p>Add what you need, when you need it.</p>
+        <ul><li>Proposal Engine</li><li>Deck Builder</li><li>Content Studio</li><li>Ghostwriter</li><li>Custom workflow modules</li></ul><em>Per module, monthly</em></div>
+      <div class="layer top"><small>Full Engine</small><h3>The Organization</h3><p>One knowledge base running every function.</p>
+        <ul><li>Marketing, sales, ops, delivery</li><li>Quarterly knowledge refresh</li><li>New hires onboard from the Engine</li><li>Governance and access controls</li></ul><em>Retainer</em></div>
+    </div>
   </div>
-</div></section>
+</section>
 
-<section class="scene" id="close"><div class="wrap rv">
-  <h2>Start with one task you <em>never do again</em>.</h2>
-  <p class="sub">We will find it in a thirty minute conversation, build the context for it, and ship the first module. The engine grows from there.</p>
-  <a class="btn" href="mailto:danielo@silentintel.com?subject=The%20knowledge%20engine">Book a conversation</a>
-</div></section>
+<!-- 10 WHY -->
+<section class="scene" id="why">
+  <div class="wrap">
+    <h2 class="r">Why it pays</h2>
+    <p class="lead r">Capacity without headcount. We are not going to quote you someone else's numbers, so here is what the structure changes.</p>
+    <div class="stats r">
+      <div class="stat"><b>&#8595;</b><h3>A volume spike stops costing you revenue</h3><p>When proposals can be produced without pulling billable people off billable work, a busy week stops being a choice between lost work and lost margin.</p></div>
+      <div class="stat"><b>1</b><h3>source of truth, findable by anyone</h3><p>The best slide, the right case study, the current pricing. Not in a person's memory, and not in a folder only one person can navigate.</p></div>
+      <div class="stat"><b>&#8734;</b><h3>Small accounts stop losing money</h3><p>Work that has to be staffed carries a cost floor. Work generated from your own context does not, which changes which accounts are worth taking.</p></div>
+      <div class="stat"><b>&#8635;</b><h3>The work compounds instead of repeating</h3><p>Today most knowledge work is rebuilt from scratch. Here each finished piece leaves something behind that the next one starts from.</p></div>
+    </div>
+    <hr class="rule r">
+    <p class="lead r" style="color:var(--star);max-width:70ch">White-label partners bloat cost until retainers stop being competitive. Generated capacity doesn't.</p>
+  </div>
+</section>
+
+<!-- 11 CLOSE -->
+<section class="scene" id="close">
+  <div class="wrap">
+    <div>
+      <h2 class="r">Start with one task you never do again.</h2>
+      <p class="lead r">We'll find it in a 30-minute conversation, build the context for it, and ship your first module. The Engine grows from there.</p>
+      <a class="cta r" href="mailto:info@thesilentintelligence.com">Book a conversation</a>
+      <p class="sig r">Silent Intelligence — San Diego</p>
+    </div>
+    <div class="core r" aria-hidden="true" style="width:min(30vw,340px)">
+      <svg viewBox="0 0 400 400">
+        <circle class="pulse" cx="200" cy="200" r="120" fill="url(#g1)"/>
+        <circle cx="200" cy="200" r="46" fill="#7CF5C9"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
 </main>
 
-<footer><div class="fl">
-  <div class="flock">
-    <svg class="mk" viewBox="0 0 52 52" fill="none"><g stroke="#e3e8ec" stroke-width="2.6" stroke-linejoin="round"><path d="M26 34 L42 42 L26 50 L10 42 Z"/><path d="M26 24 L42 32 L26 40 L10 32 Z"/><path d="M26 14 L42 22 L26 30 L10 22 Z" stroke="#eb6200"/></g></svg>
-    <span class="nm" style="font-size:16px">SMBai</span><span class="by">powered&nbsp;by</span><svg class="siwm" style="height:12px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 11737.4 980.0" role="img" aria-label="Silent Intelligence"> <path class="wm-silent" fill="currentColor" d="M176 632.0L24 632.0Q23 698.0 48.0 746.0Q73 794.0 115.5 825.0Q158 856.0 213.5 870.5Q269 885.0 328 885.0Q401 885.0 456.5 868.0Q512 851.0 549.5 820.5Q587 790.0 606.0 748.0Q625 706.0 625 657.0Q625 597.0 599.5 558.5Q574 520.0 539.0 497.0Q504 474.0 468.5 463.5Q433 453.0 413 449.0Q346 432.0 304.5 421.0Q263 410.0 239.5 399.0Q216 388.0 208.0 375.0Q200 362.0 200 341.0Q200 318.0 210.0 303.0Q220 288.0 235.5 278.0Q251 268.0 270.0 264.0Q289 260.0 308 260.0Q337 260.0 361.5 265.0Q386 270.0 405.0 282.0Q424 294.0 435.5 315.0Q447 336.0 449 368.0L601 368.0Q601 306.0 577.5 262.5Q554 219.0 514.0 191.0Q474 163.0 422.5 150.5Q371 138.0 315 138.0Q267 138.0 219.0 151.0Q171 164.0 133.0 191.0Q95 218.0 71.5 258.5Q48 299.0 48 354.0Q48 403.0 66.5 437.5Q85 472.0 115.0 495.0Q145 518.0 183.0 532.5Q221 547.0 261 557.0Q300 568.0 338.0 577.0Q376 586.0 406.0 598.0Q436 610.0 454.5 628.0Q473 646.0 473 675.0Q473 702.0 459.0 719.5Q445 737.0 424.0 747.0Q403 757.0 379.0 760.5Q355 764.0 334 764.0Q303 764.0 274.0 756.5Q245 749.0 223.5 733.5Q202 718.0 189.0 693.0Q176 668.0 176 632.0ZM733 155.0L733 869.0L890 869.0L890 155.0L733 155.0ZM1043 155.0L1043 869.0L1548 869.0L1548 737.0L1200 737.0L1200 155.0L1043 155.0ZM1651 155.0L1651 869.0L2193 869.0L2193 737.0L1808 737.0L1808 562.0L2154 562.0L2154 440.0L1808 440.0L1808 287.0L2185 287.0L2185 155.0L1651 155.0ZM2314 155.0L2314 869.0L2461 869.0L2461 391.0L2463 391.0L2760 869.0L2917 869.0L2917 155.0L2770 155.0L2770 634.0L2768 634.0L2470 155.0L2314 155.0ZM3228 287.0L3228 869.0L3385 869.0L3385 287.0L3599 287.0L3599 155.0L3014 155.0L3014 287.0L3228 287.0Z"/> <path class="wm-intel" fill="#6E6E6E" d="M4354.4 352.0L4354.4 869.0L4496.4 869.0L4496.4 352.0L4354.4 352.0ZM4638.4 155.0L4638.4 869.0L4785.4 869.0L4785.4 391.0L4787.4 391.0L5084.4 869.0L5241.4 869.0L5241.4 155.0L5094.4 155.0L5094.4 634.0L5092.4 634.0L4794.4 155.0L4638.4 155.0ZM5552.4 287.0L5552.4 869.0L5709.4 869.0L5709.4 287.0L5923.4 287.0L5923.4 155.0L5338.4 155.0L5338.4 287.0L5552.4 287.0ZM6020.4 155.0L6020.4 869.0L6562.4 869.0L6562.4 737.0L6177.4 737.0L6177.4 562.0L6523.4 562.0L6523.4 440.0L6177.4 440.0L6177.4 287.0L6554.4 287.0L6554.4 155.0L6020.4 155.0ZM6683.4 155.0L6683.4 869.0L7188.4 869.0L7188.4 737.0L6840.4 737.0L6840.4 155.0L6683.4 155.0ZM7291.4 155.0L7291.4 869.0L7796.4 869.0L7796.4 737.0L7448.4 737.0L7448.4 155.0L7291.4 155.0ZM7899.4 155.0L7899.4 869.0L8056.4 869.0L8056.4 155.0L7899.4 155.0ZM8725.4 788.0L8741.4 869.0L8841.4 869.0L8841.4 483.0L8541.4 483.0L8541.4 600.0L8699.4 600.0Q8692.4 675.0 8649.9 714.5Q8607.4 754.0 8529.4 754.0Q8476.4 754.0 8439.4 733.5Q8402.4 713.0 8379.4 679.0Q8356.4 645.0 8345.9 602.5Q8335.4 560.0 8335.4 515.0Q8335.4 468.0 8345.9 424.0Q8356.4 380.0 8379.4 345.5Q8402.4 311.0 8439.4 290.5Q8476.4 270.0 8529.4 270.0Q8586.4 270.0 8626.4 300.0Q8666.4 330.0 8680.4 390.0L8830.4 390.0Q8824.4 329.0 8797.4 282.0Q8770.4 235.0 8728.9 203.0Q8687.4 171.0 8635.9 154.5Q8584.4 138.0 8529.4 138.0Q8447.4 138.0 8381.9 167.0Q8316.4 196.0 8271.4 247.0Q8226.4 298.0 8202.4 366.5Q8178.4 435.0 8178.4 515.0Q8178.4 593.0 8202.4 660.5Q8226.4 728.0 8271.4 778.0Q8316.4 828.0 8381.9 856.5Q8447.4 885.0 8529.4 885.0Q8581.4 885.0 8632.4 863.5Q8683.4 842.0 8725.4 788.0ZM8983.4 155.0L8983.4 869.0L9525.4 869.0L9525.4 737.0L9140.4 737.0L9140.4 562.0L9486.4 562.0L9486.4 440.0L9140.4 440.0L9140.4 287.0L9517.4 287.0L9517.4 155.0L8983.4 155.0ZM9646.4 155.0L9646.4 869.0L9793.4 869.0L9793.4 391.0L9795.4 391.0L10092.4 869.0L10249.4 869.0L10249.4 155.0L10102.4 155.0L10102.4 634.0L10100.4 634.0L9802.4 155.0L9646.4 155.0ZM10878.4 395.0L11030.4 395.0Q11023.4 333.0 10996.4 285.0Q10969.4 237.0 10927.9 204.5Q10886.4 172.0 10833.9 155.0Q10781.4 138.0 10722.4 138.0Q10640.4 138.0 10574.9 167.0Q10509.4 196.0 10464.4 247.0Q10419.4 298.0 10395.4 366.5Q10371.4 435.0 10371.4 515.0Q10371.4 593.0 10395.4 660.5Q10419.4 728.0 10464.4 778.0Q10509.4 828.0 10574.9 856.5Q10640.4 885.0 10722.4 885.0Q10788.4 885.0 10843.4 865.0Q10898.4 845.0 10939.4 807.0Q10980.4 769.0 11005.4 715.0Q11030.4 661.0 11036.4 594.0L10884.4 594.0Q10875.4 666.0 10834.9 710.0Q10794.4 754.0 10722.4 754.0Q10669.4 754.0 10632.4 733.5Q10595.4 713.0 10572.4 679.0Q10549.4 645.0 10538.9 602.5Q10528.4 560.0 10528.4 515.0Q10528.4 468.0 10538.9 424.0Q10549.4 380.0 10572.4 345.5Q10595.4 311.0 10632.4 290.5Q10669.4 270.0 10722.4 270.0Q10751.4 270.0 10777.9 279.5Q10804.4 289.0 10825.4 306.0Q10846.4 323.0 10860.4 345.5Q10874.4 368.0 10878.4 395.0ZM11158.4 155.0L11158.4 869.0L11700.4 869.0L11700.4 737.0L11315.4 737.0L11315.4 562.0L11661.4 562.0L11661.4 440.0L11315.4 440.0L11315.4 287.0L11692.4 287.0L11692.4 155.0L11158.4 155.0Z"/> <rect class="wm-rule" x="3967" y="0.0" width="29.4" height="980" fill="#9A9A9A"/> <rect class="wm-dot" x="4322.4" y="122.0" width="142" height="150" fill="#E35205"/> </svg>
-  </div>
-  <div class="fnote">San Diego</div>
-</div></footer>
-
 <script>
+/* ---------- living sky ---------- */
 (function(){
-  var RM = matchMedia('(prefers-reduced-motion:reduce)').matches;
-  /* ---- living node field ---- */
-  var c=document.getElementById('sky'),x=c.getContext('2d'),W,H,DPR,nodes=[],t=0,sy=0;
-  function size(){DPR=Math.min(devicePixelRatio||1,2);W=innerWidth;H=innerHeight;
-    c.width=W*DPR;c.height=H*DPR;c.style.width=W+'px';c.style.height=H+'px';
-    x.setTransform(DPR,0,0,DPR,0,0);seed();}
-  function seed(){nodes=[];var n=Math.round(Math.min(W,1500)/26);
-    for(var i=0;i<n;i++)nodes.push({x:Math.random()*W,y:Math.random()*H,
-      vx:(Math.random()-.5)*.12,vy:(Math.random()-.5)*.12,r:Math.random()*1.4+.7,
-      hot:Math.random()<.13});}
-  function draw(){
+  const c=document.getElementById('sky'),x=c.getContext('2d');
+  const RM=matchMedia('(prefers-reduced-motion:reduce)').matches;
+  let W,H,DPR,stars=[],nodes=[],mouse={x:.5,y:.5},tx=.5,ty=.5,scrollY=0;
+  function size(){DPR=Math.min(devicePixelRatio||1,2);W=innerWidth;H=innerHeight;c.width=W*DPR;c.height=H*DPR;x.setTransform(DPR,0,0,DPR,0,0);seed();}
+  function seed(){
+    stars=[];const n=Math.round(W*H/5000);
+    for(let i=0;i<n;i++)stars.push({x:Math.random()*W,y:Math.random()*H,z:Math.random(),r:Math.random()*1.2+.2,t:Math.random()*6.28});
+    nodes=[];const m=Math.round(Math.min(W,1600)/32);
+    for(let i=0;i<m;i++)nodes.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.12,vy:(Math.random()-.5)*.12,r:Math.random()<.22?2.6:1.5,b:Math.random()<.22});
+  }
+  addEventListener('resize',size);size();
+  addEventListener('mousemove',e=>{tx=e.clientX/W;ty=e.clientY/H});
+  addEventListener('scroll',()=>{scrollY=window.scrollY},{passive:true});
+  let t=0;
+  function frame(){
+    t+=.008;mouse.x+=(tx-mouse.x)*.04;mouse.y+=(ty-mouse.y)*.04;
     x.clearRect(0,0,W,H);
-    var off=sy*.04;
-    for(var i=0;i<nodes.length;i++){
-      var a=nodes[i];
-      for(var j=i+1;j<nodes.length;j++){
-        var b=nodes[j],dx=a.x-b.x,dy=a.y-b.y,d=Math.sqrt(dx*dx+dy*dy);
-        if(d<150){x.strokeStyle='rgba(139,147,156,'+(.11*(1-d/150))+')';x.lineWidth=1;
-          x.beginPath();x.moveTo(a.x,a.y-off);x.lineTo(b.x,b.y-off);x.stroke();}
+    const px=(mouse.x-.5),py=(mouse.y-.5),sy=scrollY*.08;
+    for(const s of stars){
+      const ox=px*40*s.z,oy=py*40*s.z-sy*s.z;
+      let sx=s.x+ox,syy=((s.y+oy)%H+H)%H;
+      const a=.35+.65*(.5+.5*Math.sin(t*3+s.t))*s.z;
+      x.globalAlpha=a*.9;x.fillStyle='#F2F4FA';x.beginPath();x.arc(sx,syy,s.r,0,6.28);x.fill();
+    }
+    x.globalAlpha=1;
+    for(const n of nodes){if(!RM){n.x+=n.vx;n.y+=n.vy;}if(n.x<0)n.x=W;if(n.x>W)n.x=0;if(n.y<0)n.y=H;if(n.y>H)n.y=0;}
+    const mx=mouse.x*W,my=mouse.y*H,L=Math.min(W,H)*.16;
+    x.lineWidth=1;
+    for(let i=0;i<nodes.length;i++){
+      const a=nodes[i],ax=a.x+px*22,ay=a.y+py*22-sy*.4;
+      for(let j=i+1;j<nodes.length;j++){
+        const b=nodes[j],bx=b.x+px*22,by=b.y+py*22-sy*.4,d=Math.hypot(ax-bx,ay-by);
+        if(d<L){x.strokeStyle=`rgba(124,245,201,${(1-d/L)*.22})`;x.beginPath();x.moveTo(ax,ay);x.lineTo(bx,by);x.stroke();}
       }
+      const dm=Math.hypot(ax-mx,ay-my);
+      if(dm<L*1.6){x.strokeStyle=`rgba(124,245,201,${(1-dm/(L*1.6))*.5})`;x.beginPath();x.moveTo(ax,ay);x.lineTo(mx,my);x.stroke();}
+      if(a.b){x.fillStyle='rgba(124,245,201,.18)';x.beginPath();x.arc(ax,ay,a.r*4,0,6.28);x.fill();}
+      x.fillStyle=a.b?'#7CF5C9':'#8A92AE';x.beginPath();x.arc(ax,ay,a.r,0,6.28);x.fill();
     }
-    for(var k=0;k<nodes.length;k++){
-      var p=nodes[k];
-      x.fillStyle=p.hot?'rgba(235,98,0,.42)':'rgba(160,172,184,.26)';
-      x.beginPath();x.arc(p.x,p.y-off,p.r,0,6.283);x.fill();
+    requestAnimationFrame(frame);
+  }
+  frame();
+})();
+
+/* ---------- hero satellites ---------- */
+(function(){
+  const g=document.getElementById('sat');const labels=['Firm profile','Clients','Workflows','Voice & brand','Case studies','Frameworks'];
+  labels.forEach((l,i)=>{
+    const a=i/labels.length*Math.PI*2-Math.PI/2,x=200+Math.cos(a)*150,y=200+Math.sin(a)*150;
+    g.insertAdjacentHTML('beforeend',`<circle cx="${x}" cy="${y}" r="5" fill="#7CF5C9" stroke="none"/><circle cx="${x}" cy="${y}" r="14" fill="#7CF5C9" opacity=".15" stroke="none"/>`);
+  });
+})();
+
+/* ---------- flow particles ---------- */
+(function(){
+  const inl=document.getElementById('inlines'),outl=document.getElementById('outlines'),pg=document.getElementById('particles');
+  const back=document.getElementById('backlines'),bp=document.getElementById('backparticles');
+  /* the loop that makes it self-reinforcing: finished work returns to the core */
+  const RET='M 372 300 C 384 368, 300 392, 200 392 C 118 392, 166 300, 197 234';
+  back.insertAdjacentHTML('beforeend',`<path d="${RET}"/>`);
+  back.insertAdjacentHTML('beforeend','<path d="M 191 246 L 197 231 L 205 244" stroke-dasharray="0"/>');
+  for(let k=0;k<3;k++){
+    bp.insertAdjacentHTML('beforeend',`<circle r="2.8" fill="#7CF5C9" opacity=".9"><animateMotion dur="${(5.5+k*0.9).toFixed(2)}s" begin="${(-k*1.8).toFixed(2)}s" repeatCount="indefinite" path="${RET}"/></circle>`);
+  }
+  const ys=[30,80,130,180,230,280].map(v=>v+22);
+  ys.forEach((y,i)=>{
+    const pin=`M -20 ${y} C 90 ${y}, 120 180, 155 180`;
+    const pout=`M 245 180 C 280 180, 310 ${y}, 420 ${y}`;
+    inl.insertAdjacentHTML('beforeend',`<path d="${pin}"/>`);
+    outl.insertAdjacentHTML('beforeend',`<path d="${pout}"/>`);
+    for(let k=0;k<2;k++){
+      const d=(Math.random()*3+3).toFixed(2),b=(-(Math.random()*4)).toFixed(2);
+      pg.insertAdjacentHTML('beforeend',`<circle r="2.6" fill="#7CF5C9"><animateMotion dur="${d}s" begin="${b}s" repeatCount="indefinite" path="${pin}"/></circle>`);
+      pg.insertAdjacentHTML('beforeend',`<circle r="2.6" fill="#FFB454"><animateMotion dur="${d}s" begin="${b}s" repeatCount="indefinite" path="${pout}"/></circle>`);
     }
-  }
-  function step(){
-    for(var i=0;i<nodes.length;i++){var p=nodes[i];p.x+=p.vx;p.y+=p.vy;
-      if(p.x<-20)p.x=W+20; if(p.x>W+20)p.x=-20; if(p.y<-20)p.y=H+20; if(p.y>H+20)p.y=-20;}
-    draw();requestAnimationFrame(step);
-  }
-  addEventListener('resize',size,{passive:true});
-  addEventListener('scroll',function(){sy=scrollY;if(RM)draw();},{passive:true});
-  size(); if(RM){draw();} else {step();}
+  });
+})();
 
-  /* ---- reveal ---- */
-  if('IntersectionObserver' in window && !RM){
-    var io=new IntersectionObserver(function(es){es.forEach(function(e){
-      if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:.12});
-    document.querySelectorAll('.rv').forEach(function(el){io.observe(el);});
-  } else { document.querySelectorAll('.rv').forEach(function(el){el.classList.add('in');}); }
-
-  /* ---- section dots ---- */
-  var secs=[].slice.call(document.querySelectorAll('section.scene'));
-  var dots=[].slice.call(document.querySelectorAll('.dots a'));
-  if('IntersectionObserver' in window){
-    var io2=new IntersectionObserver(function(es){es.forEach(function(e){
-      if(e.isIntersecting){var id=e.target.id;
-        dots.forEach(function(d){d.classList.toggle('on',d.getAttribute('data-t')===id);});}});},
-      {rootMargin:'-45% 0px -45% 0px'});
-    secs.forEach(function(s){io2.observe(s);});
+/* ---------- flywheel ring ---------- */
+(function(){
+  const g=document.getElementById('ringnodes');
+  for(let i=0;i<5;i++){
+    const a=i/5*Math.PI*2-Math.PI/2,x=230+Math.cos(a)*150,y=230+Math.sin(a)*150;
+    g.insertAdjacentHTML('beforeend',`<g class="cring" style="transform-origin:${x}px ${y}px"><circle cx="${x}" cy="${y}" r="20" fill="${i?'#0E1330':'#7CF5C9'}" stroke="#7CF5C9" stroke-width="1"/><text x="${x}" y="${y+5}" text-anchor="middle" font-size="14" fill="${i?'#F2F4FA':'#05070D'}">${i+1}</text></g>`);
   }
-  setTimeout(function(){document.querySelectorAll('.rv:not(.in)').forEach(function(el){el.classList.add('in');});},2500);
+})();
+
+/* ---------- reveal + nav ---------- */
+(function(){
+  const scenes=[...document.querySelectorAll('.scene')],dots=document.querySelector('.dots');
+  scenes.forEach((s,i)=>{const a=document.createElement('a');a.href='#'+s.id;a.setAttribute('aria-label',s.querySelector('h1,h2').textContent);dots.appendChild(a);});
+  const io=new IntersectionObserver(es=>es.forEach(e=>{
+    if(e.isIntersecting){e.target.classList.add('on');const i=scenes.indexOf(e.target);[...dots.children].forEach((d,j)=>d.classList.toggle('cur',j===i));}
+  }),{threshold:.45});
+  scenes.forEach(s=>io.observe(s));
+  addEventListener('keydown',e=>{
+    const cur=scenes.findIndex(s=>s.classList.contains('on')&&Math.abs(s.getBoundingClientRect().top)<innerHeight/2);
+    if(['ArrowDown','PageDown',' '].includes(e.key)&&scenes[cur+1]){e.preventDefault();scenes[cur+1].scrollIntoView();}
+    if(['ArrowUp','PageUp'].includes(e.key)&&scenes[cur-1]){e.preventDefault();scenes[cur-1].scrollIntoView();}
+  });
 })();
 </script>
-</body></html>
+</body>
+<script>setTimeout(function(){document.querySelectorAll(".scene").forEach(function(e){e.classList.add("on");});},2500);</script>
+</html>
