@@ -249,12 +249,15 @@
       <svg viewBox="0 0 400 430" aria-hidden="true" id="flowsvg">
         <defs>
           <radialGradient id="g2"><stop offset="0" stop-color="#7CF5C9" stop-opacity=".7"/><stop offset="1" stop-color="#7CF5C9" stop-opacity="0"/></radialGradient>
+          <marker id="rtip" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 1 L 9 5 L 0 9 z" fill="#7CF5C9"/>
+          </marker>
         </defs>
         <g id="inlines" fill="none" stroke="#2A3556" stroke-width="1"></g>
         <g id="outlines" fill="none" stroke="rgba(255,180,84,.45)" stroke-width="1"></g>
-        <g id="backlines" fill="none" stroke="rgba(124,245,201,.42)" stroke-width="1.4" stroke-dasharray="5 6"></g>
+        <g id="backlines" fill="none" stroke="rgba(124,245,201,.55)" stroke-width="1.6" stroke-dasharray="6 7" stroke-linecap="round"></g>
         <g id="backparticles"></g>
-        <text x="200" y="418" text-anchor="middle" font-size="10.5" fill="#7CF5C9" letter-spacing="1.6" opacity=".85">APPROVED WORK RETURNS AS KNOWLEDGE</text>
+        <text x="200" y="424" text-anchor="middle" font-size="10" fill="#7CF5C9" letter-spacing="1.8" opacity=".9">APPROVED WORK RETURNS AS KNOWLEDGE</text>
         <circle cx="200" cy="180" r="95" fill="url(#g2)" class="pulse"/>
         <circle cx="200" cy="180" r="50" fill="#7CF5C9"/>
         <text x="200" y="176" text-anchor="middle" font-size="13" font-weight="700" fill="#05070D">THE</text>
@@ -477,12 +480,14 @@
 (function(){
   const inl=document.getElementById('inlines'),outl=document.getElementById('outlines'),pg=document.getElementById('particles');
   const back=document.getElementById('backlines'),bp=document.getElementById('backparticles');
-  /* the loop that makes it self-reinforcing: finished work returns to the core */
-  const RET='M 372 300 C 384 368, 300 392, 200 392 C 118 392, 166 300, 197 234';
-  back.insertAdjacentHTML('beforeend',`<path d="${RET}"/>`);
-  back.insertAdjacentHTML('beforeend','<path d="M 191 246 L 197 231 L 205 244" stroke-dasharray="0"/>');
+  /* the loop that makes it self-reinforcing: finished work returns to the core.
+     Routed as a symmetric channel under the diagram so it reads as a return,
+     not as another output. */
+  const RET='M 384 304 C 384 368, 332 392, 262 392 L 200 392 C 178 392, 172 370, 172 346 L 172 270 C 172 248, 182 237, 200 233';
+  back.insertAdjacentHTML('beforeend','<path d="'+RET+'" marker-end="url(#rtip)"/>');
+  back.insertAdjacentHTML('beforeend','<circle cx="384" cy="304" r="3.6" fill="#FFB454" stroke="none"/>');
   for(let k=0;k<3;k++){
-    bp.insertAdjacentHTML('beforeend',`<circle r="2.8" fill="#7CF5C9" opacity=".9"><animateMotion dur="${(5.5+k*0.9).toFixed(2)}s" begin="${(-k*1.8).toFixed(2)}s" repeatCount="indefinite" path="${RET}"/></circle>`);
+    bp.insertAdjacentHTML('beforeend','<circle r="2.8" fill="#7CF5C9" opacity=".95"><animateMotion dur="'+(6+k*1.1).toFixed(2)+'s" begin="'+(-k*2).toFixed(2)+'s" repeatCount="indefinite" path="'+RET+'"/></circle>');
   }
   const ys=[30,80,130,180,230,280].map(v=>v+22);
   ys.forEach((y,i)=>{
