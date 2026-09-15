@@ -246,7 +246,7 @@
         <div class="chip">Case studies &amp; proof</div>
         <div class="chip">Frameworks &amp; pricing logic</div>
       </div>
-      <svg viewBox="0 0 400 430" aria-hidden="true" id="flowsvg">
+      <svg viewBox="0 0 400 450" aria-hidden="true" id="flowsvg">
         <defs>
           <radialGradient id="g2"><stop offset="0" stop-color="#7CF5C9" stop-opacity=".7"/><stop offset="1" stop-color="#7CF5C9" stop-opacity="0"/></radialGradient>
           <marker id="rtip" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
@@ -257,7 +257,7 @@
         <g id="outlines" fill="none" stroke="rgba(255,180,84,.45)" stroke-width="1"></g>
         <g id="backlines" fill="none" stroke="rgba(124,245,201,.55)" stroke-width="1.6" stroke-dasharray="6 7" stroke-linecap="round"></g>
         <g id="backparticles"></g>
-        <text x="200" y="424" text-anchor="middle" font-size="10" fill="#7CF5C9" letter-spacing="1.8" opacity=".9">APPROVED WORK RETURNS AS KNOWLEDGE</text>
+        <text x="200" y="444" text-anchor="middle" font-size="10" fill="#7CF5C9" letter-spacing="1.8" opacity=".9">APPROVED WORK RETURNS AS KNOWLEDGE</text>
         <circle cx="200" cy="180" r="95" fill="url(#g2)" class="pulse"/>
         <circle cx="200" cy="180" r="50" fill="#7CF5C9"/>
         <text x="200" y="176" text-anchor="middle" font-size="13" font-weight="700" fill="#05070D">THE</text>
@@ -480,12 +480,12 @@
 (function(){
   const inl=document.getElementById('inlines'),outl=document.getElementById('outlines'),pg=document.getElementById('particles');
   const back=document.getElementById('backlines'),bp=document.getElementById('backparticles');
-  /* the loop that makes it self-reinforcing: finished work returns to the core.
-     Routed as a symmetric channel under the diagram so it reads as a return,
-     not as another output. */
-  const RET='M 384 304 C 384 368, 332 392, 262 392 L 200 392 C 178 392, 172 370, 172 346 L 172 270 C 172 248, 182 237, 200 233';
+  /* Close the circuit. Approved outputs do not re-enter the core directly -
+     they return to the KNOWLEDGE side, which then feeds the core the way it
+     already does. Symmetric arc under both columns so it never crosses the fan. */
+  const RET='M 344 332 C 344 400, 280 412, 200 412 C 120 412, 56 400, 56 332';
   back.insertAdjacentHTML('beforeend','<path d="'+RET+'" marker-end="url(#rtip)"/>');
-  back.insertAdjacentHTML('beforeend','<circle cx="384" cy="304" r="3.6" fill="#FFB454" stroke="none"/>');
+  back.insertAdjacentHTML('beforeend','<circle cx="344" cy="332" r="3.6" fill="#FFB454" stroke="none"/>');
   for(let k=0;k<3;k++){
     bp.insertAdjacentHTML('beforeend','<circle r="2.8" fill="#7CF5C9" opacity=".95"><animateMotion dur="'+(6+k*1.1).toFixed(2)+'s" begin="'+(-k*2).toFixed(2)+'s" repeatCount="indefinite" path="'+RET+'"/></circle>');
   }
