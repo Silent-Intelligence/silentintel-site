@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>A self-reinforcing knowledge engine — SMBai</title>
+<meta name="description" content="Separate what your firm knows from what it produces, so every deck, proposal and campaign starts from everything you have already worked out.">
+<meta name="robots" content="noindex,nofollow">
+<meta property="og:title" content="A self-reinforcing knowledge engine">
+<meta property="og:description" content="Separate what your firm knows from what it produces, so every deck, proposal and campaign starts from everything you have already worked out.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://silentintel.com/demo/knowledge-engine/">
+<meta name="twitter:card" content="summary">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Martian+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#f0f4f6; --paper-2:#e5eaee; --ink:#171f28; --graph:#2e363f; --graph-2:#535c65;
+  --graph-3:#7a8189; --graph-4:#697178; --dim:#196ea9; --dim-soft:rgba(25,110,169,.10);
+  --spec:#eb6200; --spec-text:#b95115; --spec-soft:rgba(235,98,0,.10); --slate:#25292f;
+  --grid:rgba(46,54,63,.09);
+  --sans:"Sora",system-ui,-apple-system,sans-serif;
+  --mono:"Martian Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+*{box-sizing:border-box} html{scroll-behavior:smooth} body{margin:0}
+body{background:var(--slate);color:var(--graph);font-family:var(--sans);font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1080px;margin:0 auto;padding:0 28px}
+h1,h2,h3,h4{margin:0;letter-spacing:-.03em;line-height:1.08;color:var(--ink)}
+p{margin:0}
+.eyb{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--spec)}
+
+/* ---- header lockup ---- */
+header{position:sticky;top:0;z-index:20;background:rgba(37,41,47,.94);backdrop-filter:blur(8px);border-bottom:1px solid rgba(122,129,137,.25)}
+.hw{max-width:1080px;margin:0 auto;padding:13px 28px;display:flex;align-items:center;justify-content:space-between;gap:18px}
+.lock{display:flex;align-items:center;gap:13px;min-width:0}
+.mk{width:26px;height:26px;flex:none}
+.nm{font-weight:700;font-size:18px;letter-spacing:-.03em;color:var(--paper)}
+.by{font-family:var(--mono);font-size:9px;letter-spacing:.11em;text-transform:uppercase;color:var(--graph-3);white-space:nowrap}
+.siwm{height:11px;width:auto;color:#aeb6bd;display:block}
+.divr{width:1px;height:26px;background:rgba(122,129,137,.4);flex:none}
+.cta-sm{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--spec);border:1px solid var(--spec);border-radius:99px;padding:7px 15px;text-decoration:none;white-space:nowrap}
+.cta-sm:hover{background:var(--spec);color:#fff}
+
+/* ---- hero ---- */
+.hero{padding:108px 0 92px;position:relative;overflow:hidden}
+.hero h1{color:var(--paper);font-size:clamp(40px,6.4vw,76px);font-weight:700;max-width:17ch;margin:22px 0 0}
+.hero h1 em{font-style:normal;color:var(--spec)}
+.hero .lede{color:#b9c0c8;font-size:clamp(18px,2.2vw,23px);font-weight:300;max-width:60ch;margin:26px 0 0;line-height:1.5}
+.heroline{height:1px;background:linear-gradient(90deg,var(--spec),transparent);margin-top:38px;max-width:420px}
+
+/* ---- sheets ---- */
+.sheet{background:var(--paper);border-radius:10px;margin:0 auto 22px;max-width:1080px;padding:66px 58px;box-shadow:0 40px 90px -60px rgba(0,0,0,.7)}
+.sheet.tight{padding:52px 58px}
+section{scroll-margin-top:70px}
+.kick{font-family:var(--mono);font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--spec-text);margin-bottom:14px}
+h2{font-size:clamp(28px,3.6vw,40px);font-weight:700}
+.sub{color:var(--graph-2);font-size:19px;margin-top:14px;max-width:64ch;font-weight:300}
+.body{color:var(--graph);margin-top:20px;max-width:66ch}
+.body p+p{margin-top:15px}
+
+/* grids */
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:38px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:38px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:26px;margin-top:38px}
+.card{background:#fff;border:1px solid #d9e0e5;border-radius:6px;padding:26px 24px}
+.card.spec{border-top:3px solid var(--spec)}
+.card.dimt{border-top:3px solid var(--dim)}
+.card h3{font-size:21px;font-weight:600;margin-bottom:9px}
+.card p{color:var(--graph-2);font-size:15.5px;line-height:1.55}
+.card .q{color:var(--graph-4);font-style:italic;font-size:15px;display:block;margin-bottom:12px;min-height:2.9em}
+.num{font-family:var(--mono);font-size:11px;color:var(--spec-text);letter-spacing:.1em;margin-bottom:9px}
+
+/* knowledge vs outputs */
+.split{display:grid;grid-template-columns:1fr auto 1fr;gap:30px;align-items:center;margin-top:40px}
+.col h4{font-family:var(--mono);font-size:11px;letter-spacing:.13em;text-transform:uppercase;margin-bottom:16px}
+.col.k h4{color:var(--dim)} .col.o h4{color:var(--spec-text)}
+.col ul{list-style:none;margin:0;padding:0}
+.col li{padding:9px 0;border-bottom:1px solid var(--grid);font-size:15.5px;color:var(--graph)}
+.col li:last-child{border-bottom:0}
+.hubwrap{text-align:center}
+.hub{width:118px;height:118px;border-radius:50%;background:var(--slate);color:var(--paper);display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:var(--mono);font-size:9.5px;letter-spacing:.11em;line-height:1.7;margin:0 auto}
+.hub b{color:var(--spec);font-weight:500}
+.note{margin-top:26px;font-family:var(--mono);font-size:12px;color:var(--graph-4);letter-spacing:.03em;border-left:2px solid var(--dim);padding-left:14px}
+
+/* flywheel */
+.flow{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-top:38px}
+.step{background:#fff;border:1px solid #d9e0e5;border-radius:6px;padding:22px 18px;position:relative}
+.step .n{width:26px;height:26px;border-radius:50%;background:var(--spec);color:#fff;font-family:var(--mono);font-size:12px;display:flex;align-items:center;justify-content:center;margin-bottom:13px}
+.step h3{font-size:17px;font-weight:600;margin-bottom:7px}
+.step p{font-size:14px;color:var(--graph-2);line-height:1.5}
+
+/* compare */
+.cmp{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:36px}
+.cmp .side{border-radius:6px;padding:28px 26px}
+.cmp .off{background:#eef1f3;border:1px solid #d9e0e5}
+.cmp .own{background:#fff;border:1px solid var(--spec);box-shadow:0 0 0 3px var(--spec-soft)}
+.cmp h3{font-size:19px;margin-bottom:16px}
+.cmp ul{list-style:none;margin:0;padding:0}
+.cmp li{padding:10px 0 10px 26px;position:relative;font-size:15.5px;border-bottom:1px solid var(--grid)}
+.cmp li:last-child{border-bottom:0}
+.cmp .off li:before{content:"×";position:absolute;left:0;color:var(--graph-3);font-size:17px}
+.cmp .own li:before{content:"✓";position:absolute;left:0;color:var(--spec);font-size:15px}
+
+/* ladder */
+.ladder{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:38px}
+.rung{background:#fff;border:1px solid #d9e0e5;border-radius:6px;padding:28px 24px;position:relative}
+.rung .tag{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--spec);margin-bottom:12px}
+.rung:nth-child(2){border-color:#c6ced4}
+.rung:nth-child(3){background:var(--slate);border-color:var(--slate)}
+.rung:nth-child(3) h3{color:var(--paper)} .rung:nth-child(3) p{color:#aeb6bd}
+
+/* layers */
+.lay{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:38px}
+.lay .tier{background:#fff;border:1px solid #d9e0e5;border-radius:6px;padding:28px 24px;display:flex;flex-direction:column}
+.lay .tier h3{font-size:20px;margin-bottom:8px}
+.lay .tier .t{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--spec-text);margin-bottom:12px}
+.lay ul{list-style:none;margin:16px 0 0;padding:0;flex:1}
+.lay li{padding:7px 0;font-size:15px;color:var(--graph-2);border-bottom:1px solid var(--grid)}
+.lay li:last-child{border-bottom:0}
+.lay .shape{margin-top:18px;font-family:var(--mono);font-size:11px;letter-spacing:.08em;color:var(--graph-4);text-transform:uppercase}
+
+/* why it pays */
+.pays{display:grid;grid-template-columns:repeat(2,1fr);gap:22px;margin-top:38px}
+.pay{background:#fff;border:1px solid #d9e0e5;border-left:3px solid var(--dim);border-radius:6px;padding:26px 24px}
+.pay h3{font-size:19px;font-weight:600;margin-bottom:9px}
+.pay p{color:var(--graph-2);font-size:15.5px;line-height:1.55}
+
+/* cta */
+.final{background:var(--slate);border-radius:10px;max-width:1080px;margin:0 auto 22px;padding:74px 58px;text-align:center}
+.final h2{color:var(--paper);font-size:clamp(28px,4vw,42px);max-width:20ch;margin:0 auto}
+.final h2 em{font-style:normal;color:var(--spec)}
+.final p{color:#b9c0c8;margin:22px auto 0;max-width:56ch;font-weight:300;font-size:18px}
+.btn{display:inline-block;margin-top:32px;background:var(--spec);color:#fff;text-decoration:none;font-weight:600;font-size:16px;padding:15px 34px;border-radius:99px}
+.btn:hover{background:#d25800}
+
+/* footer */
+footer{padding:46px 0 60px}
+.fl{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.flock{display:flex;align-items:center;gap:12px}
+.fnote{font-family:var(--mono);font-size:10.5px;letter-spacing:.09em;color:var(--graph-3);text-transform:uppercase}
+.fsi{height:13px;width:auto;color:#aeb6bd}
+
+@media (max-width:900px){
+  .g3,.g4,.flow,.ladder,.lay,.pays,.cmp,.g2{grid-template-columns:1fr}
+  .split{grid-template-columns:1fr;gap:22px}
+  .sheet,.sheet.tight,.final{padding:44px 26px;border-radius:8px}
+  .hero{padding:72px 0 62px}
+  .hw{padding:11px 20px}
+  .by,.siwm{display:none}
+  .divr{display:none}
+}
+</style></head><body>
+<header><div class="hw">
+  <div class="lock">
+    <svg class="mk" viewBox="0 0 52 52" fill="none"><g stroke="#e3e8ec" stroke-width="2.6" stroke-linejoin="round"><path d="M26 34 L42 42 L26 50 L10 42 Z"/><path d="M26 24 L42 32 L26 40 L10 32 Z"/><path d="M26 14 L42 22 L26 30 L10 22 Z" stroke="#eb6200"/></g></svg>
+    <span class="nm">SMBai</span>
+    <span class="divr"></span>
+    <span class="by">powered&nbsp;by</span>
+    <svg class="siwm" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 11737.4 980.0" role="img" aria-label="Silent Intelligence"> <path class="wm-silent" fill="currentColor" d="M176 632.0L24 632.0Q23 698.0 48.0 746.0Q73 794.0 115.5 825.0Q158 856.0 213.5 870.5Q269 885.0 328 885.0Q401 885.0 456.5 868.0Q512 851.0 549.5 820.5Q587 790.0 606.0 748.0Q625 706.0 625 657.0Q625 597.0 599.5 558.5Q574 520.0 539.0 497.0Q504 474.0 468.5 463.5Q433 453.0 413 449.0Q346 432.0 304.5 421.0Q263 410.0 239.5 399.0Q216 388.0 208.0 375.0Q200 362.0 200 341.0Q200 318.0 210.0 303.0Q220 288.0 235.5 278.0Q251 268.0 270.0 264.0Q289 260.0 308 260.0Q337 260.0 361.5 265.0Q386 270.0 405.0 282.0Q424 294.0 435.5 315.0Q447 336.0 449 368.0L601 368.0Q601 306.0 577.5 262.5Q554 219.0 514.0 191.0Q474 163.0 422.5 150.5Q371 138.0 315 138.0Q267 138.0 219.0 151.0Q171 164.0 133.0 191.0Q95 218.0 71.5 258.5Q48 299.0 48 354.0Q48 403.0 66.5 437.5Q85 472.0 115.0 495.0Q145 518.0 183.0 532.5Q221 547.0 261 557.0Q300 568.0 338.0 577.0Q376 586.0 406.0 598.0Q436 610.0 454.5 628.0Q473 646.0 473 675.0Q473 702.0 459.0 719.5Q445 737.0 424.0 747.0Q403 757.0 379.0 760.5Q355 764.0 334 764.0Q303 764.0 274.0 756.5Q245 749.0 223.5 733.5Q202 718.0 189.0 693.0Q176 668.0 176 632.0ZM733 155.0L733 869.0L890 869.0L890 155.0L733 155.0ZM1043 155.0L1043 869.0L1548 869.0L1548 737.0L1200 737.0L1200 155.0L1043 155.0ZM1651 155.0L1651 869.0L2193 869.0L2193 737.0L1808 737.0L1808 562.0L2154 562.0L2154 440.0L1808 440.0L1808 287.0L2185 287.0L2185 155.0L1651 155.0ZM2314 155.0L2314 869.0L2461 869.0L2461 391.0L2463 391.0L2760 869.0L2917 869.0L2917 155.0L2770 155.0L2770 634.0L2768 634.0L2470 155.0L2314 155.0ZM3228 287.0L3228 869.0L3385 869.0L3385 287.0L3599 287.0L3599 155.0L3014 155.0L3014 287.0L3228 287.0Z"/> <path class="wm-intel" fill="#6E6E6E" d="M4354.4 352.0L4354.4 869.0L4496.4 869.0L4496.4 352.0L4354.4 352.0ZM4638.4 155.0L4638.4 869.0L4785.4 869.0L4785.4 391.0L4787.4 391.0L5084.4 869.0L5241.4 869.0L5241.4 155.0L5094.4 155.0L5094.4 634.0L5092.4 634.0L4794.4 155.0L4638.4 155.0ZM5552.4 287.0L5552.4 869.0L5709.4 869.0L5709.4 287.0L5923.4 287.0L5923.4 155.0L5338.4 155.0L5338.4 287.0L5552.4 287.0ZM6020.4 155.0L6020.4 869.0L6562.4 869.0L6562.4 737.0L6177.4 737.0L6177.4 562.0L6523.4 562.0L6523.4 440.0L6177.4 440.0L6177.4 287.0L6554.4 287.0L6554.4 155.0L6020.4 155.0ZM6683.4 155.0L6683.4 869.0L7188.4 869.0L7188.4 737.0L6840.4 737.0L6840.4 155.0L6683.4 155.0ZM7291.4 155.0L7291.4 869.0L7796.4 869.0L7796.4 737.0L7448.4 737.0L7448.4 155.0L7291.4 155.0ZM7899.4 155.0L7899.4 869.0L8056.4 869.0L8056.4 155.0L7899.4 155.0ZM8725.4 788.0L8741.4 869.0L8841.4 869.0L8841.4 483.0L8541.4 483.0L8541.4 600.0L8699.4 600.0Q8692.4 675.0 8649.9 714.5Q8607.4 754.0 8529.4 754.0Q8476.4 754.0 8439.4 733.5Q8402.4 713.0 8379.4 679.0Q8356.4 645.0 8345.9 602.5Q8335.4 560.0 8335.4 515.0Q8335.4 468.0 8345.9 424.0Q8356.4 380.0 8379.4 345.5Q8402.4 311.0 8439.4 290.5Q8476.4 270.0 8529.4 270.0Q8586.4 270.0 8626.4 300.0Q8666.4 330.0 8680.4 390.0L8830.4 390.0Q8824.4 329.0 8797.4 282.0Q8770.4 235.0 8728.9 203.0Q8687.4 171.0 8635.9 154.5Q8584.4 138.0 8529.4 138.0Q8447.4 138.0 8381.9 167.0Q8316.4 196.0 8271.4 247.0Q8226.4 298.0 8202.4 366.5Q8178.4 435.0 8178.4 515.0Q8178.4 593.0 8202.4 660.5Q8226.4 728.0 8271.4 778.0Q8316.4 828.0 8381.9 856.5Q8447.4 885.0 8529.4 885.0Q8581.4 885.0 8632.4 863.5Q8683.4 842.0 8725.4 788.0ZM8983.4 155.0L8983.4 869.0L9525.4 869.0L9525.4 737.0L9140.4 737.0L9140.4 562.0L9486.4 562.0L9486.4 440.0L9140.4 440.0L9140.4 287.0L9517.4 287.0L9517.4 155.0L8983.4 155.0ZM9646.4 155.0L9646.4 869.0L9793.4 869.0L9793.4 391.0L9795.4 391.0L10092.4 869.0L10249.4 869.0L10249.4 155.0L10102.4 155.0L10102.4 634.0L10100.4 634.0L9802.4 155.0L9646.4 155.0ZM10878.4 395.0L11030.4 395.0Q11023.4 333.0 10996.4 285.0Q10969.4 237.0 10927.9 204.5Q10886.4 172.0 10833.9 155.0Q10781.4 138.0 10722.4 138.0Q10640.4 138.0 10574.9 167.0Q10509.4 196.0 10464.4 247.0Q10419.4 298.0 10395.4 366.5Q10371.4 435.0 10371.4 515.0Q10371.4 593.0 10395.4 660.5Q10419.4 728.0 10464.4 778.0Q10509.4 828.0 10574.9 856.5Q10640.4 885.0 10722.4 885.0Q10788.4 885.0 10843.4 865.0Q10898.4 845.0 10939.4 807.0Q10980.4 769.0 11005.4 715.0Q11030.4 661.0 11036.4 594.0L10884.4 594.0Q10875.4 666.0 10834.9 710.0Q10794.4 754.0 10722.4 754.0Q10669.4 754.0 10632.4 733.5Q10595.4 713.0 10572.4 679.0Q10549.4 645.0 10538.9 602.5Q10528.4 560.0 10528.4 515.0Q10528.4 468.0 10538.9 424.0Q10549.4 380.0 10572.4 345.5Q10595.4 311.0 10632.4 290.5Q10669.4 270.0 10722.4 270.0Q10751.4 270.0 10777.9 279.5Q10804.4 289.0 10825.4 306.0Q10846.4 323.0 10860.4 345.5Q10874.4 368.0 10878.4 395.0ZM11158.4 155.0L11158.4 869.0L11700.4 869.0L11700.4 737.0L11315.4 737.0L11315.4 562.0L11661.4 562.0L11661.4 440.0L11315.4 440.0L11315.4 287.0L11692.4 287.0L11692.4 155.0L11158.4 155.0Z"/> <rect class="wm-rule" x="3967" y="0.0" width="29.4" height="980" fill="#9A9A9A"/> <rect class="wm-dot" x="4322.4" y="122.0" width="142" height="150" fill="#E35205"/> </svg>
+  </div>
+  <a class="cta-sm" href="#start">Book a conversation</a>
+</div></header>
+
+<div class="hero"><div class="wrap">
+  <p class="eyb">SMBai, powered by Silent Intelligence</p>
+  <h1>A self-reinforcing <em>knowledge engine</em></h1>
+  <p class="lede">Marketing teams do not have a tools problem. They have a memory problem. This is the layer that separates what your organization knows from what it produces, so context stops evaporating the moment a project ends.</p>
+  <div class="heroline"></div>
+</div></div>
+
+<section class="sheet">
+  <p class="kick">The problem, in one picture</p>
+  <h2>Imagine hiring a genius.</h2>
+  <div class="body">
+    <p>Engineer, marketer, designer, strategist. Hand them the right folder and they become the best in the world at it, instantly.</p>
+    <p>One catch. They have no long-term memory. Close the folder and it is gone: the case study, the pricing logic, the slide you loved, the way your team actually does things.</p>
+    <p>That is every AI model available to you today. A knowledge engine is the set of folders you never have to hand over twice.</p>
+  </div>
+</section>
+
+<section class="sheet">
+  <p class="kick">Where the knowledge lives now</p>
+  <h2>In someone's head, last year's deck, and a folder nobody can find</h2>
+  <div class="g3">
+    <div class="card spec"><div class="num">01</div><span class="q">"I need the deck updated with the right case studies."</span><h3>It sits with one person</h3><p>The only search engine for what the organization knows is a founder's or a director's memory. It does not transfer and it does not scale.</p></div>
+    <div class="card spec"><div class="num">02</div><span class="q">"There was this really good slide somewhere."</span><h3>Every output starts from zero</h3><p>Proposals, decks, posts and pages get rebuilt because the last version is lost, off brand, or buried in someone's downloads.</p></div>
+    <div class="card spec"><div class="num">03</div><span class="q">"We had to pass on that one."</span><h3>Capacity caps revenue</h3><p>Seven proposals land in a week and work gets turned down, or billable people come off billable projects to write them. You cannot hire your way out of a spike.</p></div>
+  </div>
+</section>
+
+<section class="sheet">
+  <p class="kick">The idea</p>
+  <h2>Separate what you know from what you make</h2>
+  <p class="sub">Knowledge is the durable asset. Outputs are only what it becomes today. Most organizations store the second and lose the first.</p>
+  <div class="split">
+    <div class="col k"><h4>What you know</h4><ul>
+      <li>Firm profile and positioning</li><li>Client and audience profiles</li><li>How the work actually gets done</li><li>Voice, brand, design system</li><li>Case studies and proof</li><li>Frameworks and pricing logic</li></ul></div>
+    <div class="hubwrap"><div class="hub">KNOWLEDGE<br><b>ENGINE</b></div></div>
+    <div class="col o"><h4>What you make</h4><ul>
+      <li>Proposals and pitches</li><li>Board and sales decks</li><li>Websites and landing pages</li><li>Social and campaign content</li><li>White papers and reports</li><li>Podcast and video packaging</li></ul></div>
+  </div>
+  <p class="note">It lives in your own drive, under your own access controls. Not in a vendor's cloud, and not somewhere you cannot audit.</p>
+</section>
+
+<section class="sheet">
+  <p class="kick">How it works</p>
+  <h2>Each cycle makes the next one faster</h2>
+  <p class="sub">The engine is self-reinforcing because finished work feeds back into it. Every approved output deposits reusable knowledge instead of consuming it.</p>
+  <div class="flow">
+    <div class="step"><div class="n">1</div><h3>Capture</h3><p>We interview the team and pull in the decks, proposals, site and past work that already carry your thinking.</p></div>
+    <div class="step"><div class="n">2</div><h3>Structure</h3><p>Organized by function into folders in your own drive, in a shape both people and AI tools can read.</p></div>
+    <div class="step"><div class="n">3</div><h3>Connect</h3><p>Point the AI tools you already use at it. Every session starts by loading the right context automatically.</p></div>
+    <div class="step"><div class="n">4</div><h3>Generate</h3><p>Ask for the deck, the proposal, the campaign. What comes back is yours, not something generic.</p></div>
+    <div class="step"><div class="n">5</div><h3>Learn back</h3><p>Approved work returns to the knowledge base. The engine gets sharper with use rather than staler.</p></div>
+  </div>
+</section>
+
+<section class="sheet">
+  <p class="kick">Why not an off the shelf skill</p>
+  <h2>Generic context gives generic results</h2>
+  <p class="sub">The marketplaces sell capability. What decides the quality of the output is context, and nobody can sell you yours.</p>
+  <div class="cmp">
+    <div class="side off"><h3>A marketplace skill</h3><ul>
+      <li>Built for everyone, so built for no one</li>
+      <li>The same output any competitor can buy</li>
+      <li>Knows nothing about your clients, pricing, voice or process</li>
+      <li>Hard to connect if you are not technical</li>
+      <li>You rent the capability</li></ul></div>
+    <div class="side own"><h3>A skill built from your knowledge</h3><ul>
+      <li>Generated from your own context and the framework you choose</li>
+      <li>Runs your proposal, your deck, your content, consistently</li>
+      <li>Improves as the knowledge base grows</li>
+      <li>Set up by us, then run by your team</li>
+      <li>You own the knowledge and the skill</li></ul></div>
+  </div>
+</section>
+
+<section class="sheet">
+  <p class="kick">Where to begin</p>
+  <h2>The vision is the whole engine. The entry is one task.</h2>
+  <p class="sub">If there were one task you never had to do again, what would it be? That is the question the first conversation answers.</p>
+  <div class="ladder">
+    <div class="rung"><div class="tag">Quick win</div><h3>Solve one problem</h3><p>Pick the workflow that steals the most time. Build the context for it. Ship in weeks rather than quarters.</p></div>
+    <div class="rung"><div class="tag">Expand</div><h3>Fix the next one</h3><p>Each workflow adds folders to the same engine, so the second problem takes less work than the first.</p></div>
+    <div class="rung"><div class="tag">The engine</div><h3>Run the organization</h3><p>Marketing, operations, sales and delivery all drawing on one knowledge base that the organization owns.</p></div>
+  </div>
+</section>
+
+<section class="sheet">
+  <p class="kick">The first modules</p>
+  <h2>Where teams usually start</h2>
+  <p class="sub">Each one is a self-contained part of the engine, and each one is small enough to judge on its own.</p>
+  <div class="g4">
+    <div class="card dimt"><h3>Proposal Engine</h3><p>Consistent structure, your pricing logic, a clear approval path. Volume spikes stop forcing a choice between turning work down and pulling people off billable projects.</p></div>
+    <div class="card dimt"><h3>Deck Builder</h3><p>Board updates, launches, sales decks, rebrand rollouts. Built on your template, your assets and your proof rather than assembled from scratch.</p></div>
+    <div class="card dimt"><h3>Content Studio</h3><p>Podcast cuts, subtitles, social packaging, blog drafts. The high volume, low complexity work that quietly eats margin.</p></div>
+    <div class="card dimt"><h3>Ghostwriter</h3><p>A founder or executive voice, captured once. Posts, newsletters and thought leadership that read like the person because they are built from them.</p></div>
+  </div>
+</section>
+
+<section class="sheet">
+  <p class="kick">How it is built</p>
+  <h2>Foundation first, capabilities after</h2>
+  <div class="lay">
+    <div class="tier"><div class="t">Foundation</div><h3>Context capture</h3><p style="color:var(--graph-2);font-size:15.5px">The knowledge base itself, structured and owned by you.</p><ul><li>Discovery interviews and asset ingestion</li><li>Folder architecture in your drive</li><li>Session start and tool connections</li><li>The first quick win workflow</li></ul><div class="shape">One time setup</div></div>
+    <div class="tier"><div class="t">Capabilities</div><h3>Modules</h3><p style="color:var(--graph-2);font-size:15.5px">Add what you need, when you need it.</p><ul><li>Proposal Engine</li><li>Deck Builder</li><li>Content Studio</li><li>Ghostwriter</li><li>Custom workflow modules</li></ul><div class="shape">Per module</div></div>
+    <div class="tier"><div class="t">Full engine</div><h3>The organization</h3><p style="color:var(--graph-2);font-size:15.5px">One knowledge base running every function.</p><ul><li>Marketing, sales, operations, delivery</li><li>Quarterly knowledge refresh</li><li>New hires onboard from the engine</li><li>Governance and access controls</li></ul><div class="shape">Ongoing</div></div>
+  </div>
+</section>
+
+<section class="sheet">
+  <p class="kick">What changes</p>
+  <h2>Capacity without headcount</h2>
+  <p class="sub">We are not going to quote you someone else's numbers. Here is what the structure changes, and you can judge whether it is worth measuring in your own business.</p>
+  <div class="pays">
+    <div class="pay"><h3>A volume spike stops costing you revenue</h3><p>When proposals can be produced without pulling billable people off billable work, a busy week stops being a choice between lost work and lost margin.</p></div>
+    <div class="pay"><h3>One source of truth, findable by anyone</h3><p>The best slide, the right case study, the current pricing. Not in a person's memory, and not in a folder only one person can navigate.</p></div>
+    <div class="pay"><h3>Small accounts stop losing money</h3><p>Work that has to be staffed carries a cost floor. Work that is generated from your own context does not, which changes which accounts are worth taking.</p></div>
+    <div class="pay"><h3>The work compounds instead of repeating</h3><p>Today most knowledge work is rebuilt from scratch. Here each finished piece leaves something behind that the next one starts from.</p></div>
+  </div>
+</section>
+
+<section class="final" id="start">
+  <h2>Start with one task you <em>never do again</em>.</h2>
+  <p>We will find it in a thirty minute conversation, build the context for it, and ship the first module. The engine grows from there.</p>
+  <a class="btn" href="mailto:danielo@silentintel.com?subject=The%20knowledge%20engine">Book a conversation</a>
+</section>
+
+<footer><div class="wrap"><div class="fl">
+  <div class="flock">
+    <svg class="mk" viewBox="0 0 52 52" fill="none"><g stroke="#e3e8ec" stroke-width="2.6" stroke-linejoin="round"><path d="M26 34 L42 42 L26 50 L10 42 Z"/><path d="M26 24 L42 32 L26 40 L10 32 Z"/><path d="M26 14 L42 22 L26 30 L10 22 Z" stroke="#eb6200"/></g></svg>
+    <span class="nm" style="font-size:16px">SMBai</span>
+    <span class="by">powered&nbsp;by</span>
+    <svg class="fsi" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 11737.4 980.0" role="img" aria-label="Silent Intelligence"> <path class="wm-silent" fill="currentColor" d="M176 632.0L24 632.0Q23 698.0 48.0 746.0Q73 794.0 115.5 825.0Q158 856.0 213.5 870.5Q269 885.0 328 885.0Q401 885.0 456.5 868.0Q512 851.0 549.5 820.5Q587 790.0 606.0 748.0Q625 706.0 625 657.0Q625 597.0 599.5 558.5Q574 520.0 539.0 497.0Q504 474.0 468.5 463.5Q433 453.0 413 449.0Q346 432.0 304.5 421.0Q263 410.0 239.5 399.0Q216 388.0 208.0 375.0Q200 362.0 200 341.0Q200 318.0 210.0 303.0Q220 288.0 235.5 278.0Q251 268.0 270.0 264.0Q289 260.0 308 260.0Q337 260.0 361.5 265.0Q386 270.0 405.0 282.0Q424 294.0 435.5 315.0Q447 336.0 449 368.0L601 368.0Q601 306.0 577.5 262.5Q554 219.0 514.0 191.0Q474 163.0 422.5 150.5Q371 138.0 315 138.0Q267 138.0 219.0 151.0Q171 164.0 133.0 191.0Q95 218.0 71.5 258.5Q48 299.0 48 354.0Q48 403.0 66.5 437.5Q85 472.0 115.0 495.0Q145 518.0 183.0 532.5Q221 547.0 261 557.0Q300 568.0 338.0 577.0Q376 586.0 406.0 598.0Q436 610.0 454.5 628.0Q473 646.0 473 675.0Q473 702.0 459.0 719.5Q445 737.0 424.0 747.0Q403 757.0 379.0 760.5Q355 764.0 334 764.0Q303 764.0 274.0 756.5Q245 749.0 223.5 733.5Q202 718.0 189.0 693.0Q176 668.0 176 632.0ZM733 155.0L733 869.0L890 869.0L890 155.0L733 155.0ZM1043 155.0L1043 869.0L1548 869.0L1548 737.0L1200 737.0L1200 155.0L1043 155.0ZM1651 155.0L1651 869.0L2193 869.0L2193 737.0L1808 737.0L1808 562.0L2154 562.0L2154 440.0L1808 440.0L1808 287.0L2185 287.0L2185 155.0L1651 155.0ZM2314 155.0L2314 869.0L2461 869.0L2461 391.0L2463 391.0L2760 869.0L2917 869.0L2917 155.0L2770 155.0L2770 634.0L2768 634.0L2470 155.0L2314 155.0ZM3228 287.0L3228 869.0L3385 869.0L3385 287.0L3599 287.0L3599 155.0L3014 155.0L3014 287.0L3228 287.0Z"/> <path class="wm-intel" fill="#6E6E6E" d="M4354.4 352.0L4354.4 869.0L4496.4 869.0L4496.4 352.0L4354.4 352.0ZM4638.4 155.0L4638.4 869.0L4785.4 869.0L4785.4 391.0L4787.4 391.0L5084.4 869.0L5241.4 869.0L5241.4 155.0L5094.4 155.0L5094.4 634.0L5092.4 634.0L4794.4 155.0L4638.4 155.0ZM5552.4 287.0L5552.4 869.0L5709.4 869.0L5709.4 287.0L5923.4 287.0L5923.4 155.0L5338.4 155.0L5338.4 287.0L5552.4 287.0ZM6020.4 155.0L6020.4 869.0L6562.4 869.0L6562.4 737.0L6177.4 737.0L6177.4 562.0L6523.4 562.0L6523.4 440.0L6177.4 440.0L6177.4 287.0L6554.4 287.0L6554.4 155.0L6020.4 155.0ZM6683.4 155.0L6683.4 869.0L7188.4 869.0L7188.4 737.0L6840.4 737.0L6840.4 155.0L6683.4 155.0ZM7291.4 155.0L7291.4 869.0L7796.4 869.0L7796.4 737.0L7448.4 737.0L7448.4 155.0L7291.4 155.0ZM7899.4 155.0L7899.4 869.0L8056.4 869.0L8056.4 155.0L7899.4 155.0ZM8725.4 788.0L8741.4 869.0L8841.4 869.0L8841.4 483.0L8541.4 483.0L8541.4 600.0L8699.4 600.0Q8692.4 675.0 8649.9 714.5Q8607.4 754.0 8529.4 754.0Q8476.4 754.0 8439.4 733.5Q8402.4 713.0 8379.4 679.0Q8356.4 645.0 8345.9 602.5Q8335.4 560.0 8335.4 515.0Q8335.4 468.0 8345.9 424.0Q8356.4 380.0 8379.4 345.5Q8402.4 311.0 8439.4 290.5Q8476.4 270.0 8529.4 270.0Q8586.4 270.0 8626.4 300.0Q8666.4 330.0 8680.4 390.0L8830.4 390.0Q8824.4 329.0 8797.4 282.0Q8770.4 235.0 8728.9 203.0Q8687.4 171.0 8635.9 154.5Q8584.4 138.0 8529.4 138.0Q8447.4 138.0 8381.9 167.0Q8316.4 196.0 8271.4 247.0Q8226.4 298.0 8202.4 366.5Q8178.4 435.0 8178.4 515.0Q8178.4 593.0 8202.4 660.5Q8226.4 728.0 8271.4 778.0Q8316.4 828.0 8381.9 856.5Q8447.4 885.0 8529.4 885.0Q8581.4 885.0 8632.4 863.5Q8683.4 842.0 8725.4 788.0ZM8983.4 155.0L8983.4 869.0L9525.4 869.0L9525.4 737.0L9140.4 737.0L9140.4 562.0L9486.4 562.0L9486.4 440.0L9140.4 440.0L9140.4 287.0L9517.4 287.0L9517.4 155.0L8983.4 155.0ZM9646.4 155.0L9646.4 869.0L9793.4 869.0L9793.4 391.0L9795.4 391.0L10092.4 869.0L10249.4 869.0L10249.4 155.0L10102.4 155.0L10102.4 634.0L10100.4 634.0L9802.4 155.0L9646.4 155.0ZM10878.4 395.0L11030.4 395.0Q11023.4 333.0 10996.4 285.0Q10969.4 237.0 10927.9 204.5Q10886.4 172.0 10833.9 155.0Q10781.4 138.0 10722.4 138.0Q10640.4 138.0 10574.9 167.0Q10509.4 196.0 10464.4 247.0Q10419.4 298.0 10395.4 366.5Q10371.4 435.0 10371.4 515.0Q10371.4 593.0 10395.4 660.5Q10419.4 728.0 10464.4 778.0Q10509.4 828.0 10574.9 856.5Q10640.4 885.0 10722.4 885.0Q10788.4 885.0 10843.4 865.0Q10898.4 845.0 10939.4 807.0Q10980.4 769.0 11005.4 715.0Q11030.4 661.0 11036.4 594.0L10884.4 594.0Q10875.4 666.0 10834.9 710.0Q10794.4 754.0 10722.4 754.0Q10669.4 754.0 10632.4 733.5Q10595.4 713.0 10572.4 679.0Q10549.4 645.0 10538.9 602.5Q10528.4 560.0 10528.4 515.0Q10528.4 468.0 10538.9 424.0Q10549.4 380.0 10572.4 345.5Q10595.4 311.0 10632.4 290.5Q10669.4 270.0 10722.4 270.0Q10751.4 270.0 10777.9 279.5Q10804.4 289.0 10825.4 306.0Q10846.4 323.0 10860.4 345.5Q10874.4 368.0 10878.4 395.0ZM11158.4 155.0L11158.4 869.0L11700.4 869.0L11700.4 737.0L11315.4 737.0L11315.4 562.0L11661.4 562.0L11661.4 440.0L11315.4 440.0L11315.4 287.0L11692.4 287.0L11692.4 155.0L11158.4 155.0Z"/> <rect class="wm-rule" x="3967" y="0.0" width="29.4" height="980" fill="#9A9A9A"/> <rect class="wm-dot" x="4322.4" y="122.0" width="142" height="150" fill="#E35205"/> </svg>
+  </div>
+  <div class="fnote">San Diego · smbai.com</div>
+</div></div></footer>
+</body></html>
