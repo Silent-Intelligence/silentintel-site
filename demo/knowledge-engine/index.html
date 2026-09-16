@@ -17,7 +17,7 @@
 <style>
   :root{
     --space:#05070D; --neb:#0E1330; --star:#F2F4FA; --dim:#6E7690; --line:#1E2540;
-    --mint:#7CF5C9; --amber:#FFB454; --panel:rgba(14,19,48,.55);
+    --mint:#7CF5C9; --amber:#FFB454; --loop:#B08CFF; --panel:rgba(14,19,48,.55);
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html{scroll-snap-type:y mandatory;scroll-behavior:smooth}
@@ -69,12 +69,15 @@
 
   /* flow diagram */
   .flow{display:grid;grid-template-columns:1fr 1.4fr 1fr;gap:0;align-items:center;margin-top:40px}
+  .flow .col{position:relative;z-index:2}
+  .flow svg{position:relative;z-index:1}
+  .flow .chip{background:#0B0F1E}
   .col{display:flex;flex-direction:column;gap:10px}
   .col h4{font-size:13px;letter-spacing:.06em;font-weight:500;margin-bottom:6px}
   .chip{padding:12px 16px;border:1px solid var(--line);border-radius:6px;background:var(--panel);font-size:15px;backdrop-filter:blur(6px)}
   .chip.o{border-color:rgba(255,180,84,.25)}
   .flow svg{width:100%;height:auto;overflow:visible}
-  .retlabel{text-align:center;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--mint);opacity:.9;margin-top:14px}
+  .retlabel{text-align:center;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--loop);opacity:.95;margin-top:14px}
   .note{text-align:center;color:var(--dim);font-size:14px;margin-top:12px;font-style:normal}
 
   /* flywheel */
@@ -158,7 +161,11 @@
   .herolock .hdv{width:1px;height:24px;background:var(--line);flex:none}
   .herolock .hby{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);white-space:nowrap}
   .herolock .hsi{height:12px;width:auto;color:var(--dim);display:block}
-  #close .herolock{justify-content:center;margin:26px 0 0}
+  #close .herolock{justify-content:center;margin:22px 0 0}
+  .founders{display:grid;grid-template-columns:1fr 1fr;gap:26px;margin-top:34px;padding-top:26px;border-top:1px solid var(--line)}
+  .founders h4{font-size:15px;font-weight:600;color:var(--star);margin-bottom:6px}
+  .founders p{font-size:13.5px;line-height:1.6;color:var(--dim)}
+  @media (max-width:820px){.founders{grid-template-columns:1fr;gap:18px}}
   @media (max-width:820px){.herolock .hdv,.herolock .hby,.herolock .hsi{display:none}}
   .brand{position:fixed;top:22px;left:28px;z-index:5;display:flex;align-items:center;gap:11px;opacity:.95}
   .brand .mk{width:23px;height:23px;flex:none}
@@ -260,12 +267,12 @@
         <defs>
           <radialGradient id="g2"><stop offset="0" stop-color="#7CF5C9" stop-opacity=".7"/><stop offset="1" stop-color="#7CF5C9" stop-opacity="0"/></radialGradient>
           <marker id="rtip" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-            <path d="M 0 1 L 9 5 L 0 9 z" fill="#7CF5C9"/>
+            <path d="M 0 1 L 9 5 L 0 9 z" fill="#B08CFF"/>
           </marker>
         </defs>
         <g id="inlines" fill="none" stroke="#2A3556" stroke-width="1"></g>
         <g id="outlines" fill="none" stroke="rgba(255,180,84,.45)" stroke-width="1"></g>
-        <g id="backlines" fill="none" stroke="rgba(124,245,201,.55)" stroke-width="1.6" stroke-dasharray="6 7" stroke-linecap="round"></g>
+        <g id="backlines" fill="none" stroke="rgba(176,140,255,.5)" stroke-width="1.6" stroke-dasharray="6 7" stroke-linecap="round"></g>
         <g id="backparticles"></g>
         <g id="corewrap"><circle cx="200" cy="180" r="95" fill="url(#g2)" class="pulse"/>
         <circle cx="200" cy="180" r="50" fill="#7CF5C9"/>
@@ -416,6 +423,10 @@
       <h2 class="r">Start with one task you never do again.</h2>
       <p class="lead r">We'll find it in a 30-minute conversation, build the context for it, and ship your first module. The Engine grows from there.</p>
       <a class="cta r" href="https://calendar.app.google/hT8LNW3RvFB5fyGb6" target="_blank" rel="noopener">Book a conversation</a>
+      <div class="founders r">
+        <div><h4>Daniel Obodovski</h4><p>Co-author of The Silent Intelligence, one of the first books on the Internet of Things. Business development at Qualcomm, then technology projects for Samsung, Arm, LG and Google X.</p></div>
+        <div><h4>Michael Job</h4><p>Ten years building product development programs at Rexnord and Zurn Elkay, from the shop floor to running them. More than fifty embedded programs and over twenty product launches.</p></div>
+      </div>
       <div class="herolock r"><svg class="hmk" viewBox="0 0 52 52" fill="none"><g stroke="#F2F4FA" stroke-width="2.6" stroke-linejoin="round"><path d="M26 34 L42 42 L26 50 L10 42 Z"/><path d="M26 24 L42 32 L26 40 L10 32 Z"/><path d="M26 14 L42 22 L26 30 L10 22 Z" stroke="#EB6200"/></g></svg><span class="hnm">SMBai</span><span class="hdv"></span><span class="hby">powered&nbsp;by</span><svg class="hsi" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 11737.4 980.0" role="img" aria-label="Silent Intelligence"> <path class="wm-silent" fill="currentColor" d="M176 632.0L24 632.0Q23 698.0 48.0 746.0Q73 794.0 115.5 825.0Q158 856.0 213.5 870.5Q269 885.0 328 885.0Q401 885.0 456.5 868.0Q512 851.0 549.5 820.5Q587 790.0 606.0 748.0Q625 706.0 625 657.0Q625 597.0 599.5 558.5Q574 520.0 539.0 497.0Q504 474.0 468.5 463.5Q433 453.0 413 449.0Q346 432.0 304.5 421.0Q263 410.0 239.5 399.0Q216 388.0 208.0 375.0Q200 362.0 200 341.0Q200 318.0 210.0 303.0Q220 288.0 235.5 278.0Q251 268.0 270.0 264.0Q289 260.0 308 260.0Q337 260.0 361.5 265.0Q386 270.0 405.0 282.0Q424 294.0 435.5 315.0Q447 336.0 449 368.0L601 368.0Q601 306.0 577.5 262.5Q554 219.0 514.0 191.0Q474 163.0 422.5 150.5Q371 138.0 315 138.0Q267 138.0 219.0 151.0Q171 164.0 133.0 191.0Q95 218.0 71.5 258.5Q48 299.0 48 354.0Q48 403.0 66.5 437.5Q85 472.0 115.0 495.0Q145 518.0 183.0 532.5Q221 547.0 261 557.0Q300 568.0 338.0 577.0Q376 586.0 406.0 598.0Q436 610.0 454.5 628.0Q473 646.0 473 675.0Q473 702.0 459.0 719.5Q445 737.0 424.0 747.0Q403 757.0 379.0 760.5Q355 764.0 334 764.0Q303 764.0 274.0 756.5Q245 749.0 223.5 733.5Q202 718.0 189.0 693.0Q176 668.0 176 632.0ZM733 155.0L733 869.0L890 869.0L890 155.0L733 155.0ZM1043 155.0L1043 869.0L1548 869.0L1548 737.0L1200 737.0L1200 155.0L1043 155.0ZM1651 155.0L1651 869.0L2193 869.0L2193 737.0L1808 737.0L1808 562.0L2154 562.0L2154 440.0L1808 440.0L1808 287.0L2185 287.0L2185 155.0L1651 155.0ZM2314 155.0L2314 869.0L2461 869.0L2461 391.0L2463 391.0L2760 869.0L2917 869.0L2917 155.0L2770 155.0L2770 634.0L2768 634.0L2470 155.0L2314 155.0ZM3228 287.0L3228 869.0L3385 869.0L3385 287.0L3599 287.0L3599 155.0L3014 155.0L3014 287.0L3228 287.0Z"/> <path class="wm-intel" fill="#6E6E6E" d="M4354.4 352.0L4354.4 869.0L4496.4 869.0L4496.4 352.0L4354.4 352.0ZM4638.4 155.0L4638.4 869.0L4785.4 869.0L4785.4 391.0L4787.4 391.0L5084.4 869.0L5241.4 869.0L5241.4 155.0L5094.4 155.0L5094.4 634.0L5092.4 634.0L4794.4 155.0L4638.4 155.0ZM5552.4 287.0L5552.4 869.0L5709.4 869.0L5709.4 287.0L5923.4 287.0L5923.4 155.0L5338.4 155.0L5338.4 287.0L5552.4 287.0ZM6020.4 155.0L6020.4 869.0L6562.4 869.0L6562.4 737.0L6177.4 737.0L6177.4 562.0L6523.4 562.0L6523.4 440.0L6177.4 440.0L6177.4 287.0L6554.4 287.0L6554.4 155.0L6020.4 155.0ZM6683.4 155.0L6683.4 869.0L7188.4 869.0L7188.4 737.0L6840.4 737.0L6840.4 155.0L6683.4 155.0ZM7291.4 155.0L7291.4 869.0L7796.4 869.0L7796.4 737.0L7448.4 737.0L7448.4 155.0L7291.4 155.0ZM7899.4 155.0L7899.4 869.0L8056.4 869.0L8056.4 155.0L7899.4 155.0ZM8725.4 788.0L8741.4 869.0L8841.4 869.0L8841.4 483.0L8541.4 483.0L8541.4 600.0L8699.4 600.0Q8692.4 675.0 8649.9 714.5Q8607.4 754.0 8529.4 754.0Q8476.4 754.0 8439.4 733.5Q8402.4 713.0 8379.4 679.0Q8356.4 645.0 8345.9 602.5Q8335.4 560.0 8335.4 515.0Q8335.4 468.0 8345.9 424.0Q8356.4 380.0 8379.4 345.5Q8402.4 311.0 8439.4 290.5Q8476.4 270.0 8529.4 270.0Q8586.4 270.0 8626.4 300.0Q8666.4 330.0 8680.4 390.0L8830.4 390.0Q8824.4 329.0 8797.4 282.0Q8770.4 235.0 8728.9 203.0Q8687.4 171.0 8635.9 154.5Q8584.4 138.0 8529.4 138.0Q8447.4 138.0 8381.9 167.0Q8316.4 196.0 8271.4 247.0Q8226.4 298.0 8202.4 366.5Q8178.4 435.0 8178.4 515.0Q8178.4 593.0 8202.4 660.5Q8226.4 728.0 8271.4 778.0Q8316.4 828.0 8381.9 856.5Q8447.4 885.0 8529.4 885.0Q8581.4 885.0 8632.4 863.5Q8683.4 842.0 8725.4 788.0ZM8983.4 155.0L8983.4 869.0L9525.4 869.0L9525.4 737.0L9140.4 737.0L9140.4 562.0L9486.4 562.0L9486.4 440.0L9140.4 440.0L9140.4 287.0L9517.4 287.0L9517.4 155.0L8983.4 155.0ZM9646.4 155.0L9646.4 869.0L9793.4 869.0L9793.4 391.0L9795.4 391.0L10092.4 869.0L10249.4 869.0L10249.4 155.0L10102.4 155.0L10102.4 634.0L10100.4 634.0L9802.4 155.0L9646.4 155.0ZM10878.4 395.0L11030.4 395.0Q11023.4 333.0 10996.4 285.0Q10969.4 237.0 10927.9 204.5Q10886.4 172.0 10833.9 155.0Q10781.4 138.0 10722.4 138.0Q10640.4 138.0 10574.9 167.0Q10509.4 196.0 10464.4 247.0Q10419.4 298.0 10395.4 366.5Q10371.4 435.0 10371.4 515.0Q10371.4 593.0 10395.4 660.5Q10419.4 728.0 10464.4 778.0Q10509.4 828.0 10574.9 856.5Q10640.4 885.0 10722.4 885.0Q10788.4 885.0 10843.4 865.0Q10898.4 845.0 10939.4 807.0Q10980.4 769.0 11005.4 715.0Q11030.4 661.0 11036.4 594.0L10884.4 594.0Q10875.4 666.0 10834.9 710.0Q10794.4 754.0 10722.4 754.0Q10669.4 754.0 10632.4 733.5Q10595.4 713.0 10572.4 679.0Q10549.4 645.0 10538.9 602.5Q10528.4 560.0 10528.4 515.0Q10528.4 468.0 10538.9 424.0Q10549.4 380.0 10572.4 345.5Q10595.4 311.0 10632.4 290.5Q10669.4 270.0 10722.4 270.0Q10751.4 270.0 10777.9 279.5Q10804.4 289.0 10825.4 306.0Q10846.4 323.0 10860.4 345.5Q10874.4 368.0 10878.4 395.0ZM11158.4 155.0L11158.4 869.0L11700.4 869.0L11700.4 737.0L11315.4 737.0L11315.4 562.0L11661.4 562.0L11661.4 440.0L11315.4 440.0L11315.4 287.0L11692.4 287.0L11692.4 155.0L11158.4 155.0Z"/> <rect class="wm-rule" x="3967" y="0.0" width="29.4" height="980" fill="#9A9A9A"/> <rect class="wm-dot" x="4322.4" y="122.0" width="142" height="150" fill="#E35205"/> </svg></div>
     </div>
     <div class="core r" aria-hidden="true" style="width:min(30vw,340px)">
@@ -530,13 +541,15 @@
       const yo=outs[i], yi=ins[i], topHalf=i<3;
       const rank=topHalf?(2-i):(i-3);
       const lane=topHalf?(minY-56-rank*16):(maxY+56+rank*16);
-      const d='M 394 '+yo.toFixed(1)+' C 434 '+yo.toFixed(1)+', 438 '+lane.toFixed(1)+', 374 '+lane.toFixed(1)
-            +' L 40 '+lane.toFixed(1)
-            +' C 8 '+lane.toFixed(1)+', 8 '+yi.toFixed(1)+', -6 '+yi.toFixed(1);
-      back.insertAdjacentHTML('beforeend','<path d="'+d+'" marker-end="url(#rtip)"/>');
-      back.insertAdjacentHTML('beforeend','<circle cx="394" cy="'+yo.toFixed(1)+'" r="3.2" fill="#FFB454" stroke="none"/>');
+      /* x=0 is the left column's edge and x=400 the right column's, so
+         +56 and -56 tuck both ends equally out of sight behind the boxes */
+      const d='M 418 '+yo.toFixed(1)+' C 452 '+yo.toFixed(1)+', 456 '+lane.toFixed(1)+', 396 '+lane.toFixed(1)
+            +' L 4 '+lane.toFixed(1)
+            +' C -56 '+lane.toFixed(1)+', -52 '+yi.toFixed(1)+', -18 '+yi.toFixed(1);
+      back.insertAdjacentHTML('beforeend','<path d="'+d+'"/>');
+      back.insertAdjacentHTML('beforeend','<path d="M 206 '+(lane-4).toFixed(1)+' L 197 '+lane.toFixed(1)+' L 206 '+(lane+4).toFixed(1)+'" fill="none" stroke="#B08CFF" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" opacity=".9"/>');
       for(let n=0;n<2;n++){
-        bp.insertAdjacentHTML('beforeend','<circle r="2.5" fill="#7CF5C9" opacity=".9"><animateMotion dur="'+(7+n*1.6+i*0.4).toFixed(2)+'s" begin="'+(-(n*3+i*0.9)).toFixed(2)+'s" repeatCount="indefinite" path="'+d+'"/></circle>');
+        bp.insertAdjacentHTML('beforeend','<circle r="2.5" fill="#B08CFF" opacity=".95"><animateMotion dur="'+(7+n*1.6+i*0.4).toFixed(2)+'s" begin="'+(-(n*3+i*0.9)).toFixed(2)+'s" repeatCount="indefinite" path="'+d+'"/></circle>');
       }
     }
   }
