@@ -74,6 +74,7 @@
   .chip{padding:12px 16px;border:1px solid var(--line);border-radius:6px;background:var(--panel);font-size:15px;backdrop-filter:blur(6px)}
   .chip.o{border-color:rgba(255,180,84,.25)}
   .flow svg{width:100%;height:auto;overflow:visible}
+  .retlabel{text-align:center;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--mint);opacity:.9;margin-top:30px}
   .note{text-align:center;color:var(--dim);font-size:14px;margin-top:12px;font-style:normal}
 
   /* flywheel */
@@ -257,11 +258,10 @@
         <g id="outlines" fill="none" stroke="rgba(255,180,84,.45)" stroke-width="1"></g>
         <g id="backlines" fill="none" stroke="rgba(124,245,201,.55)" stroke-width="1.6" stroke-dasharray="6 7" stroke-linecap="round"></g>
         <g id="backparticles"></g>
-        <text x="200" y="444" text-anchor="middle" font-size="10" fill="#7CF5C9" letter-spacing="1.8" opacity=".9">APPROVED WORK RETURNS AS KNOWLEDGE</text>
-        <circle cx="200" cy="180" r="95" fill="url(#g2)" class="pulse"/>
+        <g id="corewrap"><circle cx="200" cy="180" r="95" fill="url(#g2)" class="pulse"/>
         <circle cx="200" cy="180" r="50" fill="#7CF5C9"/>
         <text x="200" y="176" text-anchor="middle" font-size="13" font-weight="700" fill="#05070D">THE</text>
-        <text x="200" y="192" text-anchor="middle" font-size="12" font-weight="700" fill="#05070D">ENGINE</text>
+        <text x="200" y="192" text-anchor="middle" font-size="12" font-weight="700" fill="#05070D">ENGINE</text></g>
         <g id="particles"></g>
       </svg>
       <div class="col">
@@ -274,6 +274,7 @@
         <div class="chip o">Podcast &amp; video packaging</div>
       </div>
     </div>
+    <p class="retlabel r">Approved work returns as knowledge</p>
     <p class="note r">It lives in your drive. Not in a vendor's cloud.</p>
   </div>
 </section>
@@ -476,31 +477,59 @@
   });
 })();
 
-/* ---------- flow particles ---------- */
+/* ---------- flow diagram, measured against the real chip positions ---------- */
 (function(){
+  const svg=document.getElementById('flowsvg');
+  if(!svg) return;
   const inl=document.getElementById('inlines'),outl=document.getElementById('outlines'),pg=document.getElementById('particles');
   const back=document.getElementById('backlines'),bp=document.getElementById('backparticles');
-  /* Close the circuit. Approved outputs do not re-enter the core directly -
-     they return to the KNOWLEDGE side, which then feeds the core the way it
-     already does. Symmetric arc under both columns so it never crosses the fan. */
-  const RET='M 344 332 C 344 400, 280 412, 200 412 C 120 412, 56 400, 56 332';
-  back.insertAdjacentHTML('beforeend','<path d="'+RET+'" marker-end="url(#rtip)"/>');
-  back.insertAdjacentHTML('beforeend','<circle cx="344" cy="332" r="3.6" fill="#FFB454" stroke="none"/>');
-  for(let k=0;k<3;k++){
-    bp.insertAdjacentHTML('beforeend','<circle r="2.8" fill="#7CF5C9" opacity=".95"><animateMotion dur="'+(6+k*1.1).toFixed(2)+'s" begin="'+(-k*2).toFixed(2)+'s" repeatCount="indefinite" path="'+RET+'"/></circle>');
-  }
-  const ys=[30,80,130,180,230,280].map(v=>v+22);
-  ys.forEach((y,i)=>{
-    const pin=`M -20 ${y} C 90 ${y}, 120 180, 155 180`;
-    const pout=`M 245 180 C 280 180, 310 ${y}, 420 ${y}`;
-    inl.insertAdjacentHTML('beforeend',`<path d="${pin}"/>`);
-    outl.insertAdjacentHTML('beforeend',`<path d="${pout}"/>`);
-    for(let k=0;k<2;k++){
-      const d=(Math.random()*3+3).toFixed(2),b=(-(Math.random()*4)).toFixed(2);
-      pg.insertAdjacentHTML('beforeend',`<circle r="2.6" fill="#7CF5C9"><animateMotion dur="${d}s" begin="${b}s" repeatCount="indefinite" path="${pin}"/></circle>`);
-      pg.insertAdjacentHTML('beforeend',`<circle r="2.6" fill="#FFB454"><animateMotion dur="${d}s" begin="${b}s" repeatCount="indefinite" path="${pout}"/></circle>`);
+  const core=document.getElementById('corewrap');
+  const cols=document.querySelectorAll('#insight .col');
+  if(cols.length<2) return;
+  const inChips=cols[0].querySelectorAll('.chip'), outChips=cols[1].querySelectorAll('.chip');
+
+  function layout(){
+    const r=svg.getBoundingClientRect();
+    if(!r.height) return;
+    const vbH=svg.viewBox.baseVal.height, k=vbH/r.height;
+    const yOf=el=>{const b=el.getBoundingClientRect();return (b.top+b.height/2-r.top)*k;};
+    const ins=[...inChips].map(yOf), outs=[...outChips].map(yOf);
+    const all=ins.concat(outs);
+    const CY=(Math.min(...all)+Math.max(...all))/2;      /* core sits on the columns' centre */
+    core.setAttribute('transform','translate(0,'+(CY-180).toFixed(2)+')');
+
+    inl.innerHTML='';outl.innerHTML='';pg.innerHTML='';back.innerHTML='';bp.innerHTML='';
+    const paths=[];
+    ins.forEach(y=>{
+      const d='M -20 '+y.toFixed(1)+' C 90 '+y.toFixed(1)+', 120 '+CY.toFixed(1)+', 150 '+CY.toFixed(1);
+      inl.insertAdjacentHTML('beforeend','<path d="'+d+'"/>');paths.push(['in',d]);
+    });
+    outs.forEach(y=>{
+      const d='M 250 '+CY.toFixed(1)+' C 280 '+CY.toFixed(1)+', 310 '+y.toFixed(1)+', 420 '+y.toFixed(1);
+      outl.insertAdjacentHTML('beforeend','<path d="'+d+'"/>');paths.push(['out',d]);
+    });
+    paths.forEach(([kind,d])=>{
+      for(let n=0;n<2;n++){
+        const dur=(Math.random()*3+3).toFixed(2),beg=(-(Math.random()*4)).toFixed(2);
+        pg.insertAdjacentHTML('beforeend','<circle r="2.6" fill="'+(kind==='in'?'#7CF5C9':'#FFB454')+'"><animateMotion dur="'+dur+'s" begin="'+beg+'s" repeatCount="indefinite" path="'+d+'"/></circle>');
+      }
+    });
+
+    /* the return arc, hung below the lowest chip on both sides */
+    const bottom=Math.max(...all), top=bottom+28, dip=bottom+76;
+    const RET='M 344 '+top.toFixed(1)+' C 344 '+dip.toFixed(1)+', 280 '+(dip+10).toFixed(1)+', 200 '+(dip+10).toFixed(1)
+            +' C 120 '+(dip+10).toFixed(1)+', 56 '+dip.toFixed(1)+', 56 '+top.toFixed(1);
+    back.insertAdjacentHTML('beforeend','<path d="'+RET+'" marker-end="url(#rtip)"/>');
+    back.insertAdjacentHTML('beforeend','<circle cx="344" cy="'+top.toFixed(1)+'" r="3.6" fill="#FFB454" stroke="none"/>');
+    for(let n=0;n<3;n++){
+      bp.insertAdjacentHTML('beforeend','<circle r="2.8" fill="#7CF5C9" opacity=".95"><animateMotion dur="'+(6+n*1.1).toFixed(2)+'s" begin="'+(-n*2).toFixed(2)+'s" repeatCount="indefinite" path="'+RET+'"/></circle>');
     }
-  });
+  }
+
+  layout();
+  addEventListener('resize',function(){clearTimeout(window.__fl);window.__fl=setTimeout(layout,120);},{passive:true});
+  if(document.fonts&&document.fonts.ready) document.fonts.ready.then(layout);
+  addEventListener('load',layout);
 })();
 
 /* ---------- flywheel ring ---------- */
