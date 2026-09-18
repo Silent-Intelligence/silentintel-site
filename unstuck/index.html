@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Where does your business get stuck? — SMBai</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Map one piece of work that keeps getting stuck, and we will send you the room's anonymous results.">
+<link rel="icon" href="/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#171f28;--head:#111827;--muted:#6b7480;--line:#d9dee7;--bg:#f8f9fb;--card:#fff;
+ --spec:#eb6200;--ok:#0f7a52;--okbg:#e7f4ee;
+ --serif:"Source Serif 4","Charter",Georgia,serif;--sans:"Sora",-apple-system,"Helvetica Neue",Arial,sans-serif}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--serif);font-size:17px;line-height:1.6;overflow-x:hidden}
+.wrap{max-width:40rem;margin:0 auto;padding:0 20px}
+header.top{border-bottom:1.5px solid var(--ink);margin-bottom:2rem}
+.brandbar{display:flex;align-items:center;gap:.7em;flex-wrap:wrap;padding-block:1.5rem .7rem;
+ font-family:var(--sans);font-size:.78rem;letter-spacing:.16em;text-transform:uppercase;color:var(--head)}
+.dot{width:9px;height:9px;background:var(--spec);border-radius:2px;transform:rotate(45deg);display:inline-block}
+h1{font-family:var(--sans);font-size:1.75rem;line-height:1.15;font-weight:700;letter-spacing:-.025em;color:var(--head);margin:0 0 .5rem}
+h1 em{font-style:normal;color:var(--spec)}
+.sub{font-family:var(--sans);font-size:.92rem;color:var(--muted);margin:0 0 1.5rem;line-height:1.5}
+.q{margin:0 0 1.5rem}
+.q>label{display:block;font-weight:600;color:var(--head);margin-bottom:.15rem}
+.q .hint{display:block;color:var(--muted);font-size:.9rem;margin-bottom:.45rem}
+input[type=text],input[type=email],textarea{width:100%;font-family:var(--serif);font-size:16px;line-height:1.55;
+ color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:5px;padding:.7rem .8rem;-webkit-appearance:none;appearance:none}
+textarea{min-height:4.6rem;resize:vertical;overflow:hidden}
+input:focus,textarea:focus{outline:2px solid var(--ink);outline-offset:1px;border-color:var(--ink)}
+.two{display:grid;gap:1rem;grid-template-columns:1fr 1fr}
+@media (max-width:34rem){.two{grid-template-columns:1fr}}
+button{font-family:var(--sans);font-size:1rem;font-weight:600;color:#fff;background:var(--ink);
+ border:0;border-radius:5px;padding:.85rem 1.5rem;cursor:pointer;width:100%}
+button:hover{background:#2b3648}
+button.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--ink);margin-top:.6rem}
+.actions{border-top:1px solid var(--line);padding-top:1.5rem;margin-top:.5rem}
+.saved{font-family:var(--sans);font-size:.78rem;color:var(--muted);text-align:center;margin-top:.7rem;min-height:1.1em}
+.done,.fallback{display:none;border-radius:6px;padding:1.5rem;margin:2rem 0}
+.done{background:var(--okbg);border:1px solid #bfe0d0}
+.done h2{font-family:var(--sans);font-size:1.1rem;color:var(--ok);margin:0 0 .5rem}
+.fallback{background:#fdf3e7;border:1px solid #e8cfa8;margin-top:1.2rem;font-size:.95rem}
+.fallback p,.done p{margin:.45rem 0}
+footer{border-top:1px solid var(--line);margin-top:2.5rem;padding:1.2rem 0 2.5rem;font-size:.8rem;color:var(--muted);font-family:var(--sans)}
+.hp{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap}
+</style>
+</head>
+<body>
+
+<header class="top"><div class="wrap"><div class="brandbar">
+  <span class="dot"></span> SMBai &nbsp;·&nbsp; Downtown Works
+</div></div></header>
+
+<main class="wrap">
+  <h1>Where does your business <em>get stuck</em>?</h1>
+  <p class="sub">Map one piece of work here and we'll send you the room's anonymous results. Takes about three minutes. Short answers are fine.</p>
+
+  <form id="f" name="unstuck-workflow" method="POST" data-netlify="true" netlify-honeypot="bot-field" action="/unstuck/thanks/">
+    <input type="hidden" name="form-name" value="unstuck-workflow">
+    <p class="hp"><label>Leave empty: <input name="bot-field"></label></p>
+
+    <div class="two">
+      <div class="q"><label for="name">Your name</label><input type="text" id="name" name="name" autocomplete="name" required></div>
+      <div class="q"><label for="email">Email</label><input type="email" id="email" name="email" autocomplete="email" required></div>
+    </div>
+    <div class="q"><label for="company">Company</label><input type="text" id="company" name="company" autocomplete="organization"></div>
+
+    <div class="q"><label for="q1">The work - what is it?</label>
+      <textarea id="q1" name="q1_the_work"></textarea></div>
+
+    <div class="q"><label for="q2">Where does it get stuck?</label>
+      <textarea id="q2" name="q2_where_stuck"></textarea></div>
+
+    <div class="q"><label for="q3">Who is it waiting on?</label>
+      <textarea id="q3" name="q3_waiting_on"></textarea></div>
+
+    <div class="q"><label for="q4">What does that cost you?</label>
+      <span class="hint">Time, money, lost work, or just the thing that never gets done. A rough answer is fine.</span>
+      <textarea id="q4" name="q4_what_it_costs"></textarea></div>
+
+    <div class="q"><label for="q5">Anything else worth knowing?</label>
+      <span class="hint">Optional. If you'd like us to follow up, say so here.</span>
+      <textarea id="q5" name="q5_anything_else"></textarea></div>
+
+    <div class="actions">
+      <button type="submit" id="submitBtn">Send</button>
+      <button type="button" class="ghost" id="dlBtn">Download a copy for yourself</button>
+      <div class="saved" id="savedNote">Saved in this browser as you type.</div>
+
+      <div class="fallback" id="fallback">
+        <p><strong>That did not send, and the fault is ours rather than yours.</strong></p>
+        <p>Nothing is lost - your answers are still here and saved in this browser, so you can try again in a moment.</p>
+        <p>If it still will not go, download the file and email it to <a href="mailto:daniel@gosmbai.com?subject=Where%20it%20gets%20stuck">daniel@gosmbai.com</a>.</p>
+        <button type="button" class="ghost" id="dlBtn3">Download your answers</button>
+      </div>
+    </div>
+  </form>
+
+  <section class="done" id="done">
+    <h2>Thank you - that has reached us.</h2>
+    <p>We'll send the room's anonymous results within a day of the session, with nothing attached to it.</p>
+    <button type="button" class="ghost" id="dlBtn2" style="margin-top:1rem">Download a copy of your answers</button>
+  </section>
+</main>
+
+<footer class="wrap">
+  SMBai, powered by Silent Intelligence &middot; We hold this only to send you the results and to prepare, we don't share it, and we delete it on request.
+</footer>
+
+<script>
+(function(){
+  var form=document.getElementById('f'), KEY='unstuck-v1';
+  var fields=[].slice.call(form.querySelectorAll('input[type=text],input[type=email],textarea'))
+                .filter(function(el){return el.name!=='bot-field'});
+  function autosize(el){ if(el.tagName!=='TEXTAREA')return; el.style.height='auto'; el.style.height=Math.max(el.scrollHeight,74)+'px'; }
+  try{ var s=JSON.parse(localStorage.getItem(KEY)||'{}'); fields.forEach(function(el){ if(s[el.name]) el.value=s[el.name]; }); }catch(e){}
+  fields.forEach(autosize);
+  var note=document.getElementById('savedNote'), t;
+  function persist(){ try{ var o={}; fields.forEach(function(el){o[el.name]=el.value}); localStorage.setItem(KEY,JSON.stringify(o));
+    note.textContent='Saved in this browser · '+new Date().toLocaleTimeString(); }catch(e){} }
+  fields.forEach(function(el){ el.addEventListener('input',function(){ autosize(el); clearTimeout(t); t=setTimeout(persist,500); }); });
+
+  function buildCopy(){
+    var who=(document.getElementById('name').value||'').trim();
+    var L=['# Where does your business get stuck?','','SMBai · Downtown Works','',
+           'Name: '+(who||'(not given)'),'Company: '+(document.getElementById('company').value||'(not given)'),
+           'Completed: '+new Date().toLocaleString(),'','---',''];
+    form.querySelectorAll('.q').forEach(function(q){
+      var el=q.querySelector('input[type=text],input[type=email],textarea');
+      if(!el||['name','email','company','bot-field'].indexOf(el.name)>-1) return;
+      L.push('## '+q.querySelector('label').textContent.trim(),'', (el.value.trim()||'(left blank)'),'');
+    });
+    return {text:L.join('\n'), name:(who.replace(/[^a-z0-9]+/gi,'_').toLowerCase()||'answers')};
+  }
+  function download(){
+    var c=buildCopy(), b=new Blob([c.text],{type:'text/markdown;charset=utf-8'}), u=URL.createObjectURL(b);
+    var a=document.createElement('a'); a.href=u; a.download='where_it_gets_stuck_'+c.name+'.md';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(function(){URL.revokeObjectURL(u)},1000);
+  }
+  ['dlBtn','dlBtn2','dlBtn3'].forEach(function(id){ document.getElementById(id).addEventListener('click',download); });
+
+  form.addEventListener('submit',function(ev){
+    if(!form.reportValidity())return;
+    ev.preventDefault();
+    var b=document.getElementById('submitBtn'); b.disabled=true; b.textContent='Sending…';
+    fetch('/',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},
+      body:new URLSearchParams(new FormData(form)).toString()})
+     .then(function(r){ if(!r.ok) throw new Error(r.status);
+       form.style.display='none';
+       document.getElementById('done').style.display='block';
+       document.getElementById('done').scrollIntoView({behavior:'smooth',block:'start'});
+       try{localStorage.removeItem(KEY)}catch(e){} })
+     .catch(function(){ b.disabled=false; b.textContent='Try sending again';
+       document.getElementById('fallback').style.display='block'; });
+  });
+})();
+</script>
+</body>
+</html>
