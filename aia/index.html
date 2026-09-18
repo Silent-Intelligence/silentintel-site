@@ -55,6 +55,10 @@ button:hover{background:#2b3648}
 button.ghost{background:transparent;color:var(--accent);border:1.5px solid var(--accent);margin-top:.6rem}
 button.ghost:hover{background:#eef0f4}
 .saved{font-family:var(--sans);font-size:.8rem;color:var(--muted);text-align:center;margin-top:.7rem;min-height:1.1em}
+.fallback{display:none;background:#fdf3e7;border:1px solid #e8cfa8;border-radius:6px;padding:1.1rem 1.2rem;margin-top:1.2rem;font-size:.95rem}
+.fallback p{margin:.45rem 0}
+.fallback p:first-child{margin-top:0}
+.fallback a{color:var(--accent)}
 .done{display:none;background:var(--okbg);border:1px solid #bfe0d0;border-radius:6px;padding:1.6rem;margin:2rem 0}
 .done h2{font-family:var(--sans);font-size:1.15rem;color:var(--ok);margin:0 0 .5rem}
 .done p{margin:.5rem 0}
@@ -178,6 +182,13 @@ footer{border-top:1px solid var(--line);margin-top:2.5rem;padding:1.2rem 0 2.5re
       <button type="submit" id="submitBtn">Send your answers</button>
       <button type="button" class="ghost" id="dlBtn">Download a copy for yourself</button>
       <div class="saved" id="savedNote">Your answers are saved in this browser as you type.</div>
+
+      <div class="fallback" id="fallback">
+        <p><strong>That did not send, and the fault is ours rather than yours.</strong></p>
+        <p>Nothing is lost. Your answers are still on this page and saved in this browser, so you can try again in a moment.</p>
+        <p>If it still will not go, download the file and email it to <a href="mailto:daniel@gosmbai.com?subject=AIA%20questionnaire">daniel@gosmbai.com</a> &mdash; that reaches us just as well.</p>
+        <button type="button" class="ghost" id="dlBtn3">Download your answers</button>
+      </div>
     </div>
   </form>
 
@@ -259,13 +270,12 @@ footer{border-top:1px solid var(--line);margin-top:2.5rem;padding:1.2rem 0 2.5re
   }
   document.getElementById('dlBtn').addEventListener('click', download);
   document.getElementById('dlBtn2').addEventListener('click', download);
+  document.getElementById('dlBtn3').addEventListener('click', download);
 
   // Submit without leaving the page, so the download button still has the answers in hand.
   // If anything about the fetch fails we fall back to a normal form POST, which Netlify
   // handles on its own - the submission is never staked on JavaScript succeeding.
-  var falling_back = false;
   form.addEventListener('submit', function(ev){
-    if (falling_back) return;              // let the native POST through
     if (!form.reportValidity()) return;
     ev.preventDefault();
     var btn = document.getElementById('submitBtn');
@@ -281,8 +291,11 @@ footer{border-top:1px solid var(--line);margin-top:2.5rem;padding:1.2rem 0 2.5re
       document.getElementById('done').scrollIntoView({ behavior: 'smooth', block: 'start' });
       try { localStorage.removeItem(KEY); } catch (e) {}
     }).catch(function(){
-      falling_back = true;
-      form.submit();                       // Netlify takes it and redirects to /aia/thanks/
+      // Never leave the respondent at a dead end holding ten minutes of typing.
+      // Their answers stay on screen and in this browser; offer the file and a mailto.
+      btn.disabled = false; btn.textContent = 'Try sending again';
+      document.getElementById('fallback').style.display = 'block';
+      document.getElementById('fallback').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     });
   });
 })();
