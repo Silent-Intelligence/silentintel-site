@@ -1,0 +1,702 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bakery Monday Review · SMBai demo</title>
+<meta name="description" content="A demo dashboard: a sample bakery reviews its AI-run social media week at Level 4 of the trust ladder. All numbers are sample data.">
+<meta name="robots" content="noindex,nofollow">
+<meta property="og:title" content="Bakery Monday Review · SMBai demo">
+<meta property="og:description" content="What an owner reviews on Monday once AI runs the social media week. Sample data.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://silentintel.com/demo/social-dashboard/">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Martian+Mono:wght@400;500&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+[hidden]{display:none!important}
+:root{
+  --paper:#f0f4f6; --card:#fbfcfd; --sunk:#e9eef1;
+  --line:rgba(46,54,63,.13); --line-2:rgba(46,54,63,.26); --grid:rgba(46,54,63,.055);
+  --ink:#171f28; --ink-2:#48515a; --ink-3:#5f6770;
+  --you:#2e363f; --you-soft:rgba(46,54,63,.07);
+  --ai:#196ea9; --ai-text:#155f92; --ai-soft:rgba(25,110,169,.10);
+  --gate:#eb6200; --gate-text:#a9480c; --gate-soft:rgba(235,98,0,.09);
+  --good:#0ca30c; --good-text:#0b6b0b; --good-soft:rgba(12,163,12,.10);
+  --warn:#fab219; --warn-text:#7a5100; --warn-soft:rgba(250,178,25,.20);
+  --crit:#d03b3b; --crit-text:#b02f2f; --crit-soft:rgba(208,59,59,.10);
+  --bar:#8b949c; --bar-now:#171f28; --axis:#c3cad0; --shade:rgba(25,110,169,.07);
+  --sans:"Sora",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"Martian Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+  --r:12px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --paper:#0e1318; --card:#161c22; --sunk:#1d252c;
+    --line:rgba(214,226,236,.11); --line-2:rgba(214,226,236,.24); --grid:rgba(214,226,236,.035);
+    --ink:#e8edf1; --ink-2:#b6bfc7; --ink-3:#98a1a9;
+    --you:#d3dae0; --you-soft:rgba(214,226,236,.07);
+    --ai:#3a8fc9; --ai-text:#72b7e6; --ai-soft:rgba(58,143,201,.15);
+    --gate:#e8680f; --gate-text:#ff9d5c; --gate-soft:rgba(232,104,15,.14);
+    --good:#0ca30c; --good-text:#46c846; --good-soft:rgba(12,163,12,.16);
+    --warn:#fab219; --warn-text:#fab219; --warn-soft:rgba(250,178,25,.13);
+    --crit:#e05656; --crit-text:#ff8080; --crit-soft:rgba(224,86,86,.15);
+    --bar:#66717b; --bar-now:#e8edf1; --axis:#303a43; --shade:rgba(58,143,201,.09);
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --paper:#0e1318; --card:#161c22; --sunk:#1d252c;
+  --line:rgba(214,226,236,.11); --line-2:rgba(214,226,236,.24); --grid:rgba(214,226,236,.035);
+  --ink:#e8edf1; --ink-2:#b6bfc7; --ink-3:#98a1a9;
+  --you:#d3dae0; --you-soft:rgba(214,226,236,.07);
+  --ai:#3a8fc9; --ai-text:#72b7e6; --ai-soft:rgba(58,143,201,.15);
+  --gate:#e8680f; --gate-text:#ff9d5c; --gate-soft:rgba(232,104,15,.14);
+  --good:#0ca30c; --good-text:#46c846; --good-soft:rgba(12,163,12,.16);
+  --warn:#fab219; --warn-text:#fab219; --warn-soft:rgba(250,178,25,.13);
+  --crit:#e05656; --crit-text:#ff8080; --crit-soft:rgba(224,86,86,.15);
+  --bar:#66717b; --bar-now:#e8edf1; --axis:#303a43; --shade:rgba(58,143,201,.09);
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0; background-color:var(--paper); color:var(--ink);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:24px 24px;
+  font:14px/1.5 var(--sans);
+  padding-inline:clamp(16px,3vw,40px); padding-block:20px 40px;
+}
+.wrap{max-width:1240px; margin-inline:auto; display:flex; flex-direction:column; gap:20px}
+.mono{font-family:var(--mono); font-size:11px; letter-spacing:.02em; color:var(--ink-3)}
+h1,h2,h3{margin:0; text-wrap:balance}
+p{margin:0}
+button{font:inherit; color:inherit; cursor:pointer}
+:focus-visible{outline:2px solid var(--ai); outline-offset:2px; border-radius:6px}
+
+/* top bar */
+.top{display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:12px 20px}
+.brand{display:flex; align-items:center; gap:10px}
+.brand svg{width:30px; height:30px; flex:none}
+.brand .nm{font-weight:600; font-size:17px; letter-spacing:-.01em}
+.demo{font-family:var(--mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.08em; padding:3px 8px; border-radius:999px; border:1px solid var(--line-2); color:var(--ink-2)}
+.top-right{display:flex; flex-direction:column; align-items:flex-end; gap:2px; text-align:right}
+.top-right b{font-weight:600; font-size:13px}
+
+/* summary */
+.summary{display:grid; grid-template-columns:minmax(0,1fr) auto; gap:16px 28px; align-items:end}
+.summary h1{font-size:clamp(22px,2.3vw,32px); font-weight:600; letter-spacing:-.02em; line-height:1.2; max-width:30ch}
+.summary .sub{margin-top:8px; color:var(--ink-2); max-width:66ch}
+.levelcard{display:flex; flex-direction:column; gap:8px; padding:12px 14px; border-radius:var(--r); background:var(--card); border:1px solid var(--line); min-width:250px}
+.levelcard .row{display:flex; align-items:baseline; gap:10px}
+.levelcard .lv{font-family:var(--mono); font-size:11px; color:var(--ai-text); text-transform:uppercase; letter-spacing:.06em}
+.levelcard .ln{font-weight:600; font-size:16px}
+.rungs{display:grid; grid-template-columns:repeat(5,1fr); gap:3px}
+.rungs i{height:6px; border-radius:2px; background:var(--sunk)}
+.rungs i.on{background:var(--ai)}
+.levelcard .note{font-size:12px; color:var(--ink-2); max-width:34ch}
+.levelcard.dropped .lv{color:var(--crit-text)}
+.levelcard.dropped .rungs i.on{background:var(--crit)}
+
+/* KPI tiles */
+.kpis{display:grid; grid-template-columns:1.5fr repeat(4,minmax(0,1fr)); gap:12px}
+.tile{background:var(--card); border:1px solid var(--line); border-radius:var(--r); padding:14px 16px; display:flex; flex-direction:column; gap:4px; min-width:0}
+.tile .lbl{font-size:12.5px; color:var(--ink-2)}
+.tile .val{font-size:26px; font-weight:600; letter-spacing:-.02em; line-height:1.15}
+.tile .delta{font-size:12px; color:var(--ink-2)}
+.tile .delta .up{color:var(--good-text); font-weight:600}
+.tile .delta .down{color:var(--crit-text); font-weight:600}
+.hero{display:grid; grid-template-columns:minmax(0,1fr) auto; gap:4px 14px; align-items:end}
+.hero .val{font-size:52px; line-height:1}
+.hero .goal{grid-column:1 / -1; margin-top:6px}
+.meter{height:6px; border-radius:3px; background:var(--sunk); overflow:hidden; margin-top:6px}
+.meter span{display:block; height:100%; background:var(--ink-2); border-radius:3px}
+.hero svg{display:block}
+
+/* layout */
+.grid-2{display:grid; grid-template-columns:minmax(0,1.55fr) minmax(0,1fr); gap:16px; align-items:start}
+.panel{background:var(--card); border:1px solid var(--line); border-radius:var(--r); padding:16px; display:flex; flex-direction:column; gap:12px; min-width:0}
+.panel-h{display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:8px 12px}
+.panel-h h2{font-size:16px; font-weight:600; letter-spacing:-.01em}
+.panel-h .hint{font-size:12.5px; color:var(--ink-2)}
+.gatepanel{border-color:color-mix(in srgb,var(--gate) 45%,var(--line))}
+
+/* who chips (from the workshop: You / AI / You sign off) */
+.who{display:inline-flex; align-items:center; gap:6px; font-family:var(--mono); font-size:10.5px; letter-spacing:.03em; padding:2px 8px; border-radius:999px; white-space:nowrap}
+.who::before{content:""; width:7px; height:7px; border-radius:50%; background:currentColor}
+.who.you{color:var(--you); background:var(--you-soft)}
+.who.ai{color:var(--ai-text); background:var(--ai-soft)}
+.who.ai::before{background:var(--ai)}
+.who.gate{color:var(--gate-text); background:var(--gate-soft)}
+.who.gate::before{background:var(--gate)}
+
+.btn{border:1px solid var(--line-2); background:var(--card); border-radius:8px; padding:6px 12px; font-size:13px; font-weight:500}
+.btn:hover{background:var(--sunk)}
+.btn.primary{background:var(--ink); color:var(--card); border-color:var(--ink)}
+.btn.primary:hover{opacity:.9}
+.btn.gatebtn{background:var(--gate); border-color:var(--gate); color:#fff}
+.btn.gatebtn:hover{opacity:.92}
+.btn.quiet{border-color:transparent; background:transparent; color:var(--ink-2); padding-inline:8px}
+.btn.quiet:hover{background:var(--sunk)}
+.btn[disabled]{opacity:.45; cursor:default}
+
+/* drafts */
+.drafts{display:flex; flex-direction:column; gap:10px}
+.draft{border:1px solid var(--line); border-radius:10px; padding:12px 14px; display:grid; grid-template-columns:auto minmax(0,1fr); gap:6px 12px; background:var(--card)}
+.ch{width:34px; height:34px; border-radius:8px; background:var(--sunk); display:grid; place-items:center; font-family:var(--mono); font-size:11px; font-weight:500; color:var(--ink-2); grid-row:span 3}
+.draft .meta{display:flex; flex-wrap:wrap; gap:4px 10px; align-items:baseline}
+.draft .meta b{font-weight:600; font-size:13.5px}
+.draft .txt{color:var(--ink); font-size:13.5px; max-width:70ch}
+.flag{display:flex; gap:8px; align-items:flex-start; font-size:12.5px; padding:7px 10px; border-radius:8px}
+.flag .ic{font-family:var(--mono); font-weight:500; flex:none}
+.flag.check{background:var(--warn-soft); color:var(--ink)}
+.flag.check .ic{color:var(--warn-text)}
+.flag.guess{background:var(--warn-soft); color:var(--ink)}
+.flag.guess .ic{color:var(--warn-text)}
+.flag.note{background:var(--sunk); color:var(--ink-2)}
+.flag.clean{background:transparent; padding:0; color:var(--ink-3)}
+.flag.clean .ic{color:var(--good-text)}
+.draft .acts{grid-column:2; display:flex; flex-wrap:wrap; gap:6px; align-items:center; margin-top:2px}
+.state{font-family:var(--mono); font-size:11px; padding:3px 9px; border-radius:999px}
+.state.ok{color:var(--good-text); background:var(--good-soft)}
+.state.back{color:var(--crit-text); background:var(--crit-soft)}
+.draft.done{background:transparent}
+.draft.done .txt,.draft.done .flag{opacity:.6}
+.sendback{grid-column:2; display:flex; flex-direction:column; gap:8px; padding:10px; border-radius:8px; background:var(--sunk)}
+.sendback fieldset{border:0; padding:0; margin:0; display:flex; flex-wrap:wrap; gap:6px 16px}
+.sendback legend{font-size:12.5px; font-weight:600; margin-bottom:4px; padding:0}
+.sendback label{font-size:13px; display:flex; gap:6px; align-items:center}
+.sendback input[type=text]{font:inherit; font-size:13px; padding:7px 10px; border-radius:8px; border:1px solid var(--line-2); background:var(--card); color:var(--ink); width:100%}
+.sendback .row{display:flex; gap:6px; flex-wrap:wrap}
+.missnote{font-size:12px; color:var(--crit-text)}
+
+/* recommendations */
+.recs{display:flex; flex-direction:column}
+.rec{padding:12px 0; border-top:1px solid var(--line); display:flex; flex-direction:column; gap:6px}
+.rec:first-child{border-top:0; padding-top:2px}
+.rec h3{font-size:14px; font-weight:600}
+.rec p{font-size:13px; color:var(--ink-2)}
+.rec .acts{display:flex; flex-wrap:wrap; gap:6px; align-items:center}
+
+/* channel table */
+.tablewrap{overflow-x:auto; margin-inline:-4px; padding-inline:4px}
+table{border-collapse:collapse; width:100%; min-width:860px}
+th,td{text-align:left; padding:10px 10px; border-top:1px solid var(--line); vertical-align:middle}
+thead th{border-top:0; font-weight:500; font-size:11.5px; color:var(--ink-3); font-family:var(--mono); letter-spacing:.02em; white-space:nowrap; padding-top:0}
+td.n,th.n{text-align:right; font-variant-numeric:tabular-nums}
+td.n{font-size:13.5px}
+.chn{display:flex; gap:10px; align-items:center}
+.chn .ch{grid-row:auto; width:30px; height:30px}
+.chn b{font-weight:600; font-size:13.5px; display:block}
+.chn span{font-size:12px; color:var(--ink-2)}
+.call{display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:600; padding:3px 9px; border-radius:999px; white-space:nowrap}
+.call.scale{color:var(--good-text); background:var(--good-soft)}
+.call.keep{color:var(--ink-2); background:var(--sunk)}
+.call.test{color:var(--ink-2); background:transparent; border:1px solid var(--line-2)}
+.call.pause{color:var(--warn-text); background:var(--warn-soft)}
+.call.paused{color:var(--ink-3); background:var(--sunk)}
+td.action{font-size:12.5px; color:var(--ink-2); max-width:34ch}
+tfoot td{font-weight:600}
+
+/* chart */
+.chartbox{position:relative}
+.chartbox svg{width:100%; height:auto; display:block; overflow:visible}
+.legendrow{display:flex; flex-wrap:wrap; gap:6px 16px; font-size:12px; color:var(--ink-2)}
+.legendrow span{display:inline-flex; gap:6px; align-items:center}
+.sw{width:12px; height:12px; border-radius:3px; display:inline-block}
+.datatable{width:100%; min-width:0}
+.datatable th,.datatable td{padding:6px 8px; font-size:12.5px}
+
+/* workflow steps */
+.steps{list-style:none; margin:0; padding:0; display:flex; flex-direction:column}
+.step{display:grid; grid-template-columns:28px minmax(0,1fr); gap:2px 10px; padding:10px 0; border-top:1px solid var(--line)}
+.step:first-child{border-top:0; padding-top:0}
+.step .no{font-family:var(--mono); font-size:11px; color:var(--ink-3); padding-top:2px}
+.step .hd{display:flex; flex-wrap:wrap; gap:4px 8px; align-items:center}
+.step .hd b{font-weight:600; font-size:13.5px}
+.step .dt{grid-column:2; font-size:12.5px; color:var(--ink-2)}
+.loop{font-size:12px; color:var(--ai-text); font-family:var(--mono); padding-top:4px}
+
+.log{display:flex; flex-direction:column}
+.logrow{display:grid; grid-template-columns:52px minmax(0,1fr); gap:2px 10px; padding:8px 0; border-top:1px solid var(--line); font-size:13px}
+.logrow:first-child{border-top:0}
+.logrow .d{font-family:var(--mono); font-size:11px; color:var(--ink-3); padding-top:2px}
+.logrow .why{grid-column:2; font-size:12.5px; color:var(--ink-2)}
+.logrow.new{animation:flash 1.6s var(--ease,ease-out)}
+@keyframes flash{from{background:var(--ai-soft)}to{background:transparent}}
+
+.tooltip{position:fixed; z-index:20; pointer-events:none; background:var(--card); border:1px solid var(--line-2); border-radius:8px; padding:7px 10px; box-shadow:0 6px 20px rgba(0,0,0,.12); font-size:12px; min-width:120px; max-width:240px}
+.tooltip strong{display:block; font-size:14px; font-weight:600}
+.tooltip span{color:var(--ink-2)}
+
+.toast{position:fixed; left:50%; bottom:calc(20px + env(safe-area-inset-bottom,0px)); transform:translateX(-50%); background:var(--ink); color:var(--card); padding:9px 16px; border-radius:10px; font-size:13px; z-index:30; max-width:calc(100% - 32px)}
+
+footer{display:flex; flex-wrap:wrap; justify-content:space-between; gap:8px 16px; align-items:center; padding-top:4px}
+
+@media (max-width:1060px){
+  .kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .kpis .hero{grid-column:1 / -1}
+}
+@media (max-width:900px){
+  .grid-2{grid-template-columns:minmax(0,1fr)}
+  .summary{grid-template-columns:minmax(0,1fr)}
+  .top-right{align-items:flex-start; text-align:left}
+}
+@media (max-width:460px){
+  .kpis{grid-template-columns:minmax(0,1fr)}
+  .hero{grid-template-columns:minmax(0,1fr)}
+  .hero .val{font-size:44px}
+}
+@media (prefers-reduced-motion: reduce){ .logrow.new{animation:none} }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div class="brand">
+      <svg viewBox="0 0 52 52" fill="none" aria-hidden="true"><g stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><path d="M26 34 L42 42 L26 50 L10 42 Z"/><path d="M26 24 L42 32 L26 40 L10 32 Z"/><path d="M26 14 L42 22 L26 30 L10 22 Z" style="stroke:var(--gate)"/></g></svg>
+      <span class="nm">Sample Bakery · Social media</span>
+      <span class="demo" title="Every number on this page is made up">Demo · sample data</span>
+    </div>
+    <div class="top-right">
+      <b>Monday review · week of Oct 12–18, 2026</b>
+      <span class="mono">Weekly run finished Mon Oct 19, 7:31 AM · drafts for Oct 20–25</span>
+    </div>
+  </header>
+
+  <section class="summary" aria-label="Summary">
+    <div>
+      <h1 id="headline">4 posts wait for your OK, and pre-orders from posts are up 9 on last week.</h1>
+      <p class="sub" id="subline">About 15 minutes this morning: approve the week, make one call on X, and sign off two replies to catering questions. The AI already made the changes it's allowed to make on its own, and they're listed below so you can undo them.</p>
+    </div>
+    <div class="levelcard" id="levelcard" aria-live="polite">
+      <div class="row"><span class="lv" id="lv-num">Level 4</span><span class="ln" id="lv-name">Runs the week</span></div>
+      <div class="rungs" id="rungs" aria-hidden="true"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></div>
+      <p class="note" id="lv-note">Back at Level 4 after three clean weeks. Three clean weeks here make it eligible for Level 5, and that step is your call.</p>
+    </div>
+  </section>
+
+  <section class="kpis" aria-label="This week's numbers">
+    <div class="tile hero">
+      <div class="lbl" style="grid-column:1 / -1">Pre-orders from post links · the number to watch</div>
+      <div>
+        <div class="val">38</div>
+        <div class="delta"><span class="up">▲ 9</span> vs last week (29)</div>
+      </div>
+      <svg id="hero-spark" width="200" height="56" role="img" aria-label="Pre-orders from post links over eight weeks: 14, 17, 19, 23, 18, 26, 29, 38"></svg>
+      <div class="goal">
+        <div class="delta">October goal <b>140</b> · <b>82</b> so far with 13 days left · on pace</div>
+        <div class="meter" aria-hidden="true"><span style="width:58.6%"></span></div>
+      </div>
+    </div>
+    <div class="tile">
+      <div class="lbl">Impressions</div>
+      <div class="val">24.6K</div>
+      <div class="delta"><span class="up">▲ 12%</span> vs 22.0K</div>
+    </div>
+    <div class="tile">
+      <div class="lbl">Engagement rate</div>
+      <div class="val">4.6%</div>
+      <div class="delta"><span class="up">▲ 0.6 pts</span> vs 4.0%</div>
+    </div>
+    <div class="tile">
+      <div class="lbl">New followers</div>
+      <div class="val">+186</div>
+      <div class="delta"><span class="up">▲ 35</span> vs +151</div>
+    </div>
+    <div class="tile">
+      <div class="lbl">Customer questions answered</div>
+      <div class="val" id="q-val">17 of 19</div>
+      <div class="delta" id="q-delta">2 replies wait for your OK</div>
+    </div>
+  </section>
+
+  <div class="grid-2">
+    <section class="panel gatepanel" aria-labelledby="gate-h">
+      <div class="panel-h">
+        <div>
+          <h2 id="gate-h">Waiting for your OK</h2>
+          <p class="hint">Next week's posts sit in Buffer as drafts. Nothing goes out until you approve it.</p>
+        </div>
+        <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap">
+          <span class="who gate">You sign off · anything a customer sees</span>
+          <button class="btn gatebtn" id="approve-all" type="button">Approve the week</button>
+        </div>
+      </div>
+      <div class="drafts" id="drafts"></div>
+    </section>
+
+    <section class="panel" aria-labelledby="rec-h">
+      <div class="panel-h">
+        <div>
+          <h2 id="rec-h">Recommendations</h2>
+          <p class="hint">What last week's numbers suggest, and who decides each one.</p>
+        </div>
+      </div>
+      <div class="recs" id="recs"></div>
+    </section>
+  </div>
+
+  <section class="panel" aria-labelledby="ch-h">
+    <div class="panel-h">
+      <div>
+        <h2 id="ch-h">By channel · week of Oct 12–18</h2>
+        <p class="hint">Engagement rate is reactions, comments, saves and shares divided by impressions. Pre-orders count orders through each post's tagged link.</p>
+      </div>
+    </div>
+    <div class="tablewrap">
+      <table id="ch-table">
+        <thead>
+          <tr>
+            <th scope="col">Channel</th>
+            <th scope="col" class="n">Posts</th>
+            <th scope="col" class="n">Impressions</th>
+            <th scope="col" class="n">Engagement</th>
+            <th scope="col">8 weeks · line at 1%</th>
+            <th scope="col" class="n">New followers</th>
+            <th scope="col" class="n">Pre-orders</th>
+            <th scope="col">Call</th>
+            <th scope="col">What to do</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+        <tfoot>
+          <tr>
+            <td>All channels</td><td class="n">7</td><td class="n">24.6K</td><td class="n">4.6%</td><td></td><td class="n">+186</td><td class="n">38</td><td></td><td></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </section>
+
+  <div class="grid-2">
+    <section class="panel" aria-labelledby="po-h">
+      <div class="panel-h">
+        <div>
+          <h2 id="po-h">Pre-orders from post links, by week</h2>
+          <p class="hint">The number the bakery already tracked before any AI. The row under each week shows the level the workflow ran at.</p>
+        </div>
+        <button class="btn quiet" id="po-toggle" type="button" aria-pressed="false">Show as table</button>
+      </div>
+      <div class="chartbox" id="po-chart">
+        <svg id="po-svg" viewBox="0 0 600 290" role="img" aria-label="Column chart of weekly pre-orders from post links, August 24 to October 12"></svg>
+      </div>
+      <div id="po-table" hidden></div>
+      <div class="legendrow">
+        <span><i class="sw" style="background:var(--shade); border:1px solid var(--line-2)"></i>Weeks run at Level 4</span>
+        <span><b style="color:var(--crit-text); font-family:var(--mono); font-size:11px">✕</b> A miss caught at sign-off</span>
+      </div>
+      <p class="hint" style="font-size:12.5px; color:var(--ink-2)">Sep 21: a draft priced the pumpkin loaf at $9, and the menu says $11. You caught it before it went out, and the workflow dropped to Level 3 for three weeks.</p>
+    </section>
+
+    <div style="display:flex; flex-direction:column; gap:16px; min-width:0">
+      <section class="panel" aria-labelledby="wf-h">
+        <div class="panel-h">
+          <h2 id="wf-h">The workflow this week</h2>
+          <span class="legendrow"><span class="who you">You</span><span class="who ai">AI</span><span class="who gate">You sign off</span></span>
+        </div>
+        <ol class="steps" id="steps"></ol>
+        <div class="loop">↺ Replies go back into the context for next Monday.</div>
+      </section>
+
+      <section class="panel" aria-labelledby="log-h">
+        <div class="panel-h">
+          <div>
+            <h2 id="log-h">Decision log</h2>
+            <p class="hint">Every approval, change or send-back adds a line. The skill reads this first.</p>
+          </div>
+        </div>
+        <div class="log" id="log"></div>
+      </section>
+    </div>
+  </div>
+
+  <footer>
+    <span class="mono">SMBai demo · sample data for a made-up bakery · the social media example from the Downtown Works trust-ladder session, Sep 29, 2026</span>
+    <button class="btn quiet" id="reset" type="button">Reset the demo</button>
+  </footer>
+</div>
+
+<div class="tooltip" id="tip" hidden role="status"></div>
+<div class="toast" id="toast" hidden role="status"></div>
+
+<script>
+(function(){
+  var NS='http://www.w3.org/2000/svg';
+  var $=function(id){return document.getElementById(id)};
+  function el(tag,attrs,parent){var e=document.createElementNS(NS,tag);for(var k in attrs)e.setAttribute(k,attrs[k]);if(parent)parent.appendChild(e);return e}
+  function h(tag,cls,text){var e=document.createElement(tag);if(cls)e.className=cls;if(text!=null)e.textContent=text;return e}
+
+  /* ---------- data (all made up) ---------- */
+  var WEEKS=['Aug 24','Aug 31','Sep 7','Sep 14','Sep 21','Sep 28','Oct 5','Oct 12'];
+  var PRE=[14,17,19,23,18,26,29,38];
+  var LV=[3,3,3,4,4,3,3,3];
+  var MISS=[0,0,0,0,1,0,0,0];
+
+  var CHANNELS=[
+    {id:'ig',abbr:'IG',name:'Instagram carousels',fmt:'5-slide carousels',posts:2,imp:'11.8K',eng:6.2,fol:121,pre:22,spark:[4.1,4.4,4.6,5.0,4.8,5.3,5.6,6.2],call:'scale',callLabel:'▲ Scale',action:'Best channel for pre-orders. Keep two a week and post them at 7:30 AM.'},
+    {id:'fb',abbr:'FB',name:'Facebook Page',fmt:'photo posts',posts:3,imp:'6.1K',eng:3.4,fol:38,pre:9,spark:[3.0,3.2,3.1,3.3,3.0,3.4,3.3,3.4],call:'keep',callLabel:'● Keep',action:'Steady. Neighbors share hours and closures here, so keep those on Facebook.'},
+    {id:'li',abbr:'LI',name:'LinkedIn posts',fmt:'first-person posts',posts:1,imp:'4.9K',eng:3.9,fol:24,pre:7,spark:[2.2,2.5,2.4,2.9,2.7,3.1,3.5,3.9],call:'test',callLabel:'◇ Test',action:'The catering post brought 3 office orders. Try a second weekly post for office managers.'},
+    {id:'x',abbr:'X',name:'X threads',fmt:'4-post threads',posts:1,imp:'1.8K',eng:0.7,fol:3,pre:0,spark:[1.4,1.3,1.1,0.9,0.8,0.9,0.6,0.7],call:'pause',callLabel:'‖ Pause?',action:'Under 1% for five weeks and no pre-orders. See the recommendation to pause.'}
+  ];
+
+  var DRAFTS=[
+    {id:'d1',abbr:'IG',ch:'Instagram carousel · 5 slides',when:'Tue Oct 20 · 7:30 AM',
+     text:'Slide 1: “Maria’s pumpkin loaf, out of the oven at 6 AM.” … Slide 5: “Pre-order for Saturday pickup. Link in bio.”',
+     flag:{kind:'check',ic:'! check',msg:'Slide 3 shows Maria’s hands at the bench. Your rules say no staff photos without their OK, and I couldn’t find hers.'}},
+    {id:'d2',abbr:'LI',ch:'LinkedIn post',when:'Wed Oct 21 · 11:30 AM',
+     text:'“Friday meeting coming up? We deliver a dozen pastries to offices within a mile. Order by Thursday at 3 PM.”',
+     flag:{kind:'guess',ic:'? guess',msg:'I took the Thursday 3 PM cutoff from a reply in the inbox. It isn’t in offers.md yet.'}},
+    {id:'d3',abbr:'FB',ch:'Facebook Page post',when:'Thu Oct 22 · 4:00 PM',
+     text:'“Halloween hours: we close at 3 PM on Saturday, Oct 31. Pumpkin loaf pre-orders are open until Thursday.”',
+     flag:{kind:'clean',ic:'✓',msg:'Nothing guessed. Hours from hours-and-closures.md, product from menu-and-prices.md.'}},
+    {id:'d4',abbr:'X',ch:'X thread · 4 posts',when:'Fri Oct 23 · 8:00 AM',
+     text:'“How a 12-year-old sourdough starter gets through a heat wave. 1/4”',
+     flag:{kind:'note',ic:'i note',msg:'Drafted because X is still on the plan. It has been under 1% engagement for five weeks.'}}
+  ];
+
+  var RECS=[
+    {id:'r1',title:'Pause X threads for four weeks',why:'Last week: 0.7% engagement, 3 new followers and no pre-orders. Under 1% for five weeks in a row. The time goes to a second Instagram carousel.',who:'you',whoLabel:'Your call · it changes the plan',
+     acts:[['Pause X','pause','primary'],['Keep it','keep','']]},
+    {id:'r2',title:'Reply to two catering questions on LinkedIn',why:'Two office managers asked about Friday delivery. Both replies are drafted from the dozen-pastry offer.',who:'gate',whoLabel:'You sign off · a customer sees it',
+     acts:[['Send both replies','send','gatebtn'],['Edit first','edit','']]},
+    {id:'r3',title:'Carousels moved to 7:30 AM',why:'Morning carousels got 2.1× the saves of evening ones over six weeks. Applied to Tuesday’s draft.',who:'ai',whoLabel:'Done by AI · timing inside the week you approve',
+     acts:[['Undo','undo','quiet']]},
+    {id:'r4',title:'Office managers added to the brief',why:'3 of last week’s 7 LinkedIn pre-orders came from offices ordering for Friday meetings. Added to brief.md under “who buys”.',who:'ai',whoLabel:'Done by AI · keeps the brief current',
+     acts:[['Undo','undo','quiet']]}
+  ];
+
+  var LEVELS={
+    3:{name:'Prepares',steps:[['ai','Uses a saved brief'],['you','Set the month’s goal'],['ai','Writes the week'],['gate','Each post'],['ai','Sends the numbers']]},
+    4:{name:'Runs the week',steps:[['ai','Keeps the brief current'],['you','Set the month’s goal'],['ai','Writes the week'],['gate','The week, in one sitting'],['ai','Reads the replies']]}
+  };
+  var STEP_NAMES=['Collect context','Set the objective','Draft and tailor','Schedule and post','Read what landed'];
+
+  var LOG0=[['Oct 6','Post before 7 pm','Evening posts got almost no replies.'],['Oct 9','Name the baker in the post','Customers ask for Maria by name.'],['Oct 13','No discount posts on Saturdays','We sell out by noon anyway.']];
+
+  /* ---------- state ---------- */
+  var S;
+  function fresh(){return {drafts:{},recs:{},level:4,missed:false,log:LOG0.slice(),repliesSent:false}}
+
+  /* ---------- helpers ---------- */
+  var toastT;
+  function toast(msg){var t=$('toast');t.textContent=msg;t.hidden=false;clearTimeout(toastT);toastT=setTimeout(function(){t.hidden=true},2600)}
+  function addLog(what,why){S.log.push(['Oct 19',what,why||'']);renderLog(true)}
+  var tip=$('tip');
+  function showTip(evt,strong,sub){
+    tip.textContent='';var s=h('strong',null,strong);tip.appendChild(s);if(sub){tip.appendChild(h('span',null,sub))}
+    tip.hidden=false;
+    var x,y;if(evt&&evt.clientX!=null&&evt.type!=='focus'){x=evt.clientX;y=evt.clientY}else{var r=evt.target.getBoundingClientRect();x=r.left+r.width/2;y=r.top}
+    var tw=tip.offsetWidth,th=tip.offsetHeight;var left=Math.min(Math.max(8,x-tw/2),window.innerWidth-tw-8);var top=y-th-12;if(top<8)top=y+16;
+    tip.style.left=left+'px';tip.style.top=top+'px';
+  }
+  function hideTip(){tip.hidden=true}
+  function bindTip(node,strong,sub){
+    node.addEventListener('pointermove',function(e){showTip(e,strong,sub)});
+    node.addEventListener('pointerleave',hideTip);
+    node.addEventListener('focus',function(e){showTip(e,strong,sub)});
+    node.addEventListener('blur',hideTip);
+  }
+
+  /* ---------- hero sparkline ---------- */
+  function heroSpark(){
+    var svg=$('hero-spark');svg.textContent='';
+    var W=200,H=56,p=6,max=40;
+    var xs=function(i){return p+i*(W-2*p)/(PRE.length-1)},ys=function(v){return H-p-(H-2*p)*v/max};
+    var d=PRE.map(function(v,i){return (i?'L':'M')+xs(i).toFixed(1)+' '+ys(v).toFixed(1)}).join(' ');
+    el('path',{d:d+' L'+xs(PRE.length-1)+' '+(H-p)+' L'+xs(0)+' '+(H-p)+' Z',fill:'var(--ink)','fill-opacity':'.07',stroke:'none'},svg);
+    el('path',{d:d,fill:'none',stroke:'var(--ink-3)','stroke-width':2,'stroke-linejoin':'round','stroke-linecap':'round'},svg);
+    el('circle',{cx:xs(PRE.length-1),cy:ys(PRE[PRE.length-1]),r:4.5,fill:'var(--ink)',stroke:'var(--card)','stroke-width':2},svg);
+  }
+
+  /* ---------- channel table ---------- */
+  function spark(parent,vals,name){
+    var W=132,H=36,p=5,max=7;
+    var svg=el('svg',{width:W,height:H,viewBox:'0 0 '+W+' '+H,role:'img','aria-label':name+' engagement over eight weeks: '+vals.join('%, ')+'%'},parent);
+    var xs=function(i){return p+i*(W-2*p)/(vals.length-1)},ys=function(v){return H-p-(H-2*p)*v/max};
+    el('line',{x1:p,x2:W-p,y1:ys(1),y2:ys(1),stroke:'var(--line-2)','stroke-width':1},svg);
+    var d=vals.map(function(v,i){return (i?'L':'M')+xs(i).toFixed(1)+' '+ys(v).toFixed(1)}).join(' ');
+    el('path',{d:d,fill:'none',stroke:'var(--ink-3)','stroke-width':2,'stroke-linejoin':'round','stroke-linecap':'round'},svg);
+    el('circle',{cx:xs(vals.length-1),cy:ys(vals[vals.length-1]),r:4,fill:'var(--ink)',stroke:'var(--card)','stroke-width':2},svg);
+    var bw=(W-2*p)/(vals.length-1);
+    vals.forEach(function(v,i){
+      var r=el('rect',{x:Math.max(0,xs(i)-bw/2),y:0,width:bw,height:H,fill:'transparent'},svg);
+      bindTip(r,v.toFixed(1)+'%',name+' · week of '+WEEKS[i]);
+    });
+  }
+  function renderTable(){
+    var tb=document.querySelector('#ch-table tbody');tb.textContent='';
+    CHANNELS.forEach(function(c){
+      var tr=h('tr');
+      var td=h('td');var box=h('div','chn');box.appendChild(h('span','ch',c.abbr));var nm=h('div');nm.appendChild(h('b',null,c.name));nm.appendChild(h('span',null,c.fmt));box.appendChild(nm);td.appendChild(box);tr.appendChild(td);
+      tr.appendChild(h('td','n',String(c.posts)));
+      tr.appendChild(h('td','n',c.imp));
+      tr.appendChild(h('td','n',c.eng.toFixed(1)+'%'));
+      var sp=h('td');spark(sp,c.spark,c.name);tr.appendChild(sp);
+      tr.appendChild(h('td','n','+'+c.fol));
+      tr.appendChild(h('td','n',String(c.pre)));
+      var call=h('td');var paused=(c.id==='x'&&S.recs.r1==='pause');var kept=(c.id==='x'&&S.recs.r1==='keep');
+      call.appendChild(h('span','call '+(paused?'paused':kept?'keep':c.call),paused?'‖ Paused to Nov 16':kept?'● Keep':c.callLabel));tr.appendChild(call);
+      tr.appendChild(h('td','action',paused?'Paused by your call. The time goes to a second Instagram carousel.':kept?'Kept on the plan by your call. Revisit in four weeks.':c.action));
+      tb.appendChild(tr);
+    });
+  }
+
+  /* ---------- column chart ---------- */
+  function renderChart(){
+    var svg=$('po-svg');svg.textContent='';
+    var W=600,H=290,m={l:36,r:10,t:24,b:74},pw=W-m.l-m.r,ph=H-m.t-m.b,max=40,n=WEEKS.length,band=pw/n,bw=24;
+    var y=function(v){return m.t+ph*(1-v/max)};
+    for(var i=0;i<n;i++){ if(LV[i]===4){el('rect',{x:m.l+i*band+2,y:m.t-8,width:band-4,height:ph+8+46,rx:6,fill:'var(--shade)'},svg)} }
+    [0,10,20,30,40].forEach(function(t){
+      el('line',{x1:m.l,x2:W-m.r,y1:y(t),y2:y(t),stroke:t===0?'var(--axis)':'var(--line)','stroke-width':1},svg);
+      var tx=el('text',{x:m.l-8,y:y(t)+3.5,'text-anchor':'end','font-family':'Martian Mono, ui-monospace, monospace','font-size':10,fill:'var(--ink-3)'},svg);tx.textContent=t;
+    });
+    for(var j=0;j<n;j++){
+      var cx=m.l+band*j+band/2,x0=cx-bw/2,x1=cx+bw/2,top=y(PRE[j]),bot=y(0),now=(j===n-1);
+      el('path',{d:'M'+x0+' '+bot+' V'+(top+4)+' Q'+x0+' '+top+' '+(x0+4)+' '+top+' H'+(x1-4)+' Q'+x1+' '+top+' '+x1+' '+(top+4)+' V'+bot+' Z',fill:now?'var(--bar-now)':'var(--bar)'},svg);
+      if(now){var vl=el('text',{x:cx,y:top-8,'text-anchor':'middle','font-size':13,'font-weight':600,fill:'var(--ink)','font-family':'Sora, system-ui, sans-serif'},svg);vl.textContent=PRE[j]}
+      var wl=el('text',{x:cx,y:m.t+ph+17,'text-anchor':'middle','font-family':'Martian Mono, ui-monospace, monospace','font-size':9.5,fill:'var(--ink-3)'},svg);wl.textContent=WEEKS[j];
+      var ll=el('text',{x:cx,y:m.t+ph+40,'text-anchor':'middle','font-family':'Martian Mono, ui-monospace, monospace','font-size':10.5,'font-weight':500,fill:MISS[j]?'var(--crit-text)':(LV[j]===4?'var(--ai-text)':'var(--ink-2)')},svg);ll.textContent='L'+LV[j]+(MISS[j]?' ✕':'');
+      var hit=el('rect',{x:m.l+band*j,y:m.t-10,width:band,height:ph+60,fill:'transparent',tabindex:0,role:'img','aria-label':'Week of '+WEEKS[j]+': '+PRE[j]+' pre-orders, Level '+LV[j]+(MISS[j]?', a miss':'')},svg);
+      bindTip(hit,PRE[j]+' pre-orders','Week of '+WEEKS[j]+' · Level '+LV[j]+(MISS[j]?' · miss: $9 price, menu says $11':'')+(j===n-1?' · this week':''));
+    }
+    var lab=el('text',{x:m.l-8,y:m.t+ph+40,'text-anchor':'end','font-family':'Martian Mono, ui-monospace, monospace','font-size':9,fill:'var(--ink-3)'},svg);lab.textContent='lvl';
+    // table twin
+    var t=$('po-table');t.textContent='';var tbl=h('table','datatable');var th=h('thead');var r=h('tr');['Week of','Pre-orders','Level','Miss'].forEach(function(c,i){var x=h('th',i===1?'n':null,c);x.scope='col';r.appendChild(x)});th.appendChild(r);tbl.appendChild(th);
+    var tb=h('tbody');WEEKS.forEach(function(w,i){var rr=h('tr');rr.appendChild(h('td',null,w));rr.appendChild(h('td','n',String(PRE[i])));rr.appendChild(h('td',null,'Level '+LV[i]));rr.appendChild(h('td',null,MISS[i]?'Yes · $9 price, menu says $11':''));tb.appendChild(rr)});tbl.appendChild(tb);t.appendChild(tbl);
+  }
+
+  /* ---------- drafts ---------- */
+  function pending(){return DRAFTS.filter(function(d){return !S.drafts[d.id]}).length}
+  function approvedCount(){return DRAFTS.filter(function(d){return S.drafts[d.id]&&S.drafts[d.id].state==='ok'}).length}
+  function renderDrafts(){
+    var box=$('drafts');box.textContent='';
+    DRAFTS.forEach(function(d){
+      var st=S.drafts[d.id];
+      var card=h('article','draft'+(st&&st.state!=='form'?' done':''));
+      card.appendChild(h('span','ch',d.abbr));
+      var meta=h('div','meta');meta.appendChild(h('b',null,d.ch));meta.appendChild(h('span','mono',d.when));card.appendChild(meta);
+      card.appendChild(h('p','txt',d.text));
+      var f=h('div','flag '+d.flag.kind);f.appendChild(h('span','ic',d.flag.ic));f.appendChild(h('span',null,d.flag.msg));card.appendChild(f);
+      if(!st){
+        var a=h('div','acts');
+        var ok=h('button','btn gatebtn','Approve');ok.type='button';ok.addEventListener('click',function(){S.drafts[d.id]={state:'ok'};addLog('Approved: '+d.ch+', '+d.when.replace(' · ',' '),d.flag.kind==='check'?'Checked the flagged item first.':'');afterChange();toast('Approved. It stays in the Buffer queue for '+d.when.split(' · ')[0]+'.')});
+        var ed=h('button','btn','Edit in Buffer');ed.type='button';ed.addEventListener('click',function(){toast('In the real setup this opens the draft in Buffer.')});
+        var sb=h('button','btn quiet','Send back');sb.type='button';sb.addEventListener('click',function(){S.drafts[d.id]={state:'form'};renderDrafts();var i=document.getElementById('why-'+d.id);if(i)i.focus()});
+        a.appendChild(ok);a.appendChild(ed);a.appendChild(sb);card.appendChild(a);
+      }else if(st.state==='form'){
+        var form=h('form','sendback');
+        var fs=h('fieldset');fs.appendChild(h('legend',null,'What was wrong?'));
+        [['style','The wording or style'],['fact','A fact was wrong (counts as a miss)']].forEach(function(o,idx){var lb=h('label');var r=document.createElement('input');r.type='radio';r.name='kind-'+d.id;r.value=o[0];r.id='kind-'+d.id+'-'+o[0];if(idx===0)r.checked=true;lb.appendChild(r);lb.appendChild(document.createTextNode(o[1]));fs.appendChild(lb)});
+        form.appendChild(fs);
+        var inp=document.createElement('input');inp.type='text';inp.id='why-'+d.id;inp.placeholder='One line for the decision log, e.g. “Too many hashtags”';inp.setAttribute('aria-label','Why you sent it back');form.appendChild(inp);
+        var mn=h('p','missnote','A wrong fact is a miss: the workflow drops back to Level 3 until it has three clean weeks again.');form.appendChild(mn);
+        var row=h('div','row');var sub=h('button','btn primary','Send back and log it');sub.type='submit';var cc=h('button','btn quiet','Cancel');cc.type='button';cc.addEventListener('click',function(){delete S.drafts[d.id];renderDrafts()});row.appendChild(sub);row.appendChild(cc);form.appendChild(row);
+        form.addEventListener('submit',function(e){e.preventDefault();var kind=form.querySelector('input[name="kind-'+d.id+'"]:checked').value;var why=inp.value.trim()||(kind==='fact'?'A fact was wrong.':'Needs a rewrite.');S.drafts[d.id]={state:'back',kind:kind};addLog('Sent back: '+d.ch,why);if(kind==='fact'&&!S.missed){S.missed=true;S.level=3;addLog('Workflow dropped to Level 3','One miss drops it back down. Each post needs your OK until three clean weeks.');toast('Logged. That was a miss, so the workflow is back at Level 3.')}else{toast('Sent back and logged. The AI redrafts it by this afternoon.')}afterChange()});
+        card.appendChild(form);
+      }else{
+        var a2=h('div','acts');a2.appendChild(h('span','state '+(st.state==='ok'?'ok':'back'),st.state==='ok'?'✓ Approved':(st.kind==='fact'?'✕ Sent back · miss':'↩ Sent back')));
+        var u=h('button','btn quiet','Undo');u.type='button';u.addEventListener('click',function(){var was=S.drafts[d.id];delete S.drafts[d.id];if(was&&was.kind==='fact'&&S.missed){S.missed=false;S.level=4;addLog('Undid the miss on '+d.ch,'Back to Level 4.')}afterChange()});a2.appendChild(u);card.appendChild(a2);
+      }
+      box.appendChild(card);
+    });
+    var left=pending();var all=$('approve-all');all.disabled=left===0;all.textContent=left===0?'Week reviewed':'Approve the week';
+  }
+
+  /* ---------- recommendations ---------- */
+  function renderRecs(){
+    var box=$('recs');box.textContent='';
+    RECS.forEach(function(r){
+      var st=S.recs[r.id];
+      var item=h('div','rec');
+      var top=h('div');top.style.display='flex';top.style.flexWrap='wrap';top.style.gap='6px 10px';top.style.alignItems='center';
+      top.appendChild(h('h3',null,r.title));item.appendChild(top);
+      item.appendChild(h('p',null,r.why));
+      var a=h('div','acts');a.appendChild(h('span','who '+r.who,r.whoLabel));
+      if(st){
+        var label={pause:'✓ Paused to Nov 16',keep:'✓ Kept on the plan',send:'✓ Both replies sent',undo:'↩ Undone'}[st]||'✓ Done';
+        a.appendChild(h('span','state '+(st==='undo'?'back':'ok'),label));
+        var u=h('button','btn quiet',st==='undo'?'Put it back':'Undo');u.type='button';u.addEventListener('click',function(){delete S.recs[r.id];if(r.id==='r2'){S.repliesSent=false}afterChange()});
+        a.appendChild(u);
+      }else{
+        r.acts.forEach(function(act){
+          var b=h('button','btn '+act[2],act[0]);b.type='button';
+          b.addEventListener('click',function(){
+            if(act[1]==='edit'){toast('In the real setup this opens both replies in the inbox.');return}
+            S.recs[r.id]=act[1];
+            if(act[1]==='pause')addLog('Pause X threads for four weeks','0.7% engagement and no pre-orders. The time goes to Instagram.');
+            if(act[1]==='keep')addLog('Keep X threads on the plan','Owner’s call. Revisit on Nov 16.');
+            if(act[1]==='send'){S.repliesSent=true;addLog('Sent two catering replies on LinkedIn','Quoted the dozen-pastry offer.')}
+            if(act[1]==='undo')addLog('Undid: '+r.title,'');
+            afterChange();toast(act[1]==='undo'?'Undone and logged.':'Done and logged.');
+          });
+          a.appendChild(b);
+        });
+      }
+      item.appendChild(a);box.appendChild(item);
+    });
+  }
+
+  /* ---------- workflow steps + level ---------- */
+  function renderSteps(){
+    var L=LEVELS[S.level];var box=$('steps');box.textContent='';
+    var ok=approvedCount();
+    var details=[
+      S.level===4?'Read 44 replies and 6 inbox questions, and updated what-worked.md.':'Used brief.md as saved. It won’t update the brief on its own at this level.',
+      'October: 140 pre-orders from post links. 82 so far.',
+      '4 drafts in Buffer, written with the weekly-social-post skill.',
+      S.level===4?ok+' of 4 approved.':'Each post needs your OK before it’s scheduled. '+ok+' of 4 approved.',
+      S.level===4?'Next read: Mon Oct 26, 7:30 AM.':'Sends you the numbers. You read the replies.'
+    ];
+    L.steps.forEach(function(s,i){
+      var li=h('li','step');li.appendChild(h('span','no','0'+(i+1)));
+      var hd=h('div','hd');hd.appendChild(h('b',null,STEP_NAMES[i]));hd.appendChild(h('span','who '+s[0],(s[0]==='you'?'You':s[0]==='ai'?'AI':'You sign off')+' · '+s[1]));li.appendChild(hd);
+      li.appendChild(h('p','dt',details[i]));box.appendChild(li);
+    });
+    var lc=$('levelcard');lc.classList.toggle('dropped',S.level===3);
+    $('lv-num').textContent='Level '+S.level;$('lv-name').textContent=L.name;
+    var rungs=$('rungs').children;for(var i=0;i<rungs.length;i++){rungs[i].className=i<S.level?'on':''}
+    $('lv-note').textContent=S.level===4?'Back at Level 4 after three clean weeks. Three clean weeks here make it eligible for Level 5, and that step is your call.':'One miss dropped it back to Level 3. Three clean weeks bring it back to Level 4.';
+  }
+
+  function renderLog(flashLast){
+    var box=$('log');box.textContent='';
+    S.log.slice().reverse().forEach(function(r,i){
+      var row=h('div','logrow'+(flashLast&&i===0?' new':''));row.appendChild(h('span','d',r[0]));row.appendChild(h('span',null,r[1]));if(r[2])row.appendChild(h('span','why',r[2]));box.appendChild(row);
+    });
+  }
+
+  function renderSummary(){
+    var left=pending();var needYou=(S.recs.r1?0:1);var replies=S.repliesSent?0:2;
+    var parts=[];
+    if(left)parts.push(left+(left===1?' post waits':' posts wait')+' for your OK');
+    var hl=(parts.length?parts[0]+', and pre-orders':'The week is reviewed, and pre-orders')+' from posts are up 9 on last week.';
+    $('headline').textContent=hl;
+    var todo=[];if(left)todo.push('approve the week');if(needYou)todo.push('make one call on X');if(replies)todo.push('sign off two replies to catering questions');
+    $('subline').textContent=todo.length?('Still to do this morning: '+todo.join(', ').replace(/, ([^,]*)$/,' and $1')+'. The AI already made the changes it’s allowed to make on its own, and they’re listed so you can undo them.'):'Nothing else needs you this week. The next run is Monday, Oct 26 at 7:30 AM.';
+    $('q-val').textContent=S.repliesSent?'19 of 19':'17 of 19';
+    $('q-delta').textContent=S.repliesSent?'All answered':'2 replies wait for your OK';
+  }
+
+  function afterChange(){renderDrafts();renderRecs();renderTable();renderSteps();renderSummary()}
+
+  $('approve-all').addEventListener('click',function(){
+    var n=0;DRAFTS.forEach(function(d){if(!S.drafts[d.id]){S.drafts[d.id]={state:'ok'};n++}});
+    if(n){addLog('Approved the week: '+n+(n===1?' post':' posts'),'Checked the flagged items first.');afterChange();toast('Approved. '+n+(n===1?' post stays':' posts stay')+' in the Buffer queue.')}
+  });
+  $('po-toggle').addEventListener('click',function(){
+    var show=$('po-table').hidden;$('po-table').hidden=!show;$('po-chart').hidden=show;this.textContent=show?'Show as chart':'Show as table';this.setAttribute('aria-pressed',String(show));
+  });
+  $('reset').addEventListener('click',function(){S=fresh();renderLog(false);afterChange();toast('Demo reset.')});
+  window.addEventListener('scroll',hideTip,{passive:true});
+
+  S=fresh();
+  heroSpark();renderChart();renderLog(false);afterChange();
+})();
+</script>
+</body>
+</html>
